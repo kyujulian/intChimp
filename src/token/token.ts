@@ -28,3 +28,16 @@ export const RBRACE = "}";
 //Keywords
 export const FUNCTION = "FUNCTION";
 export const LET = "LET";
+
+
+export const keywords : Record<string, TokenType> = {
+    "fn": FUNCTION,
+    "let": LET,
+}
+
+
+export function lookupIdent(ident: string) : TokenType {
+    const tok = keywords[ident];
+    if (tok !== undefined) return tok;
+    return "IDENT";
+}

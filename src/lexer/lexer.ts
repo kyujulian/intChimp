@@ -39,6 +39,8 @@ const newToken = (tokenType : token.TokenType, ch: any) => {
 
 export function nextToken(l: Lexer) {
     let tok : token.Token;
+
+    skipWhitespace(l);
     
     switch(l.ch) {
         case '=': {
@@ -73,8 +75,22 @@ export function nextToken(l: Lexer) {
             tok = newToken(token.RBRACE, l.ch);
             break;
         }
-        default:{
+        case 0: {
             tok = newToken(token.EOF, "");
+            break;
+        }
+        default:{
+            if (isLetter(l.ch)) {
+                let literal = readIdentifier(l);
+                tok = newToken(token.lookupIdent(literal), literal)
+                return tok;
+            } else if (isDigit(l.ch)) {
+                let literal = readNumber(l);
+                tok = newToken(token.INT, literal);
+                return tok;
+            }
+            else tok = newToken(token.ILLEGAL, l.ch);
+
             break;
         }
         
@@ -82,4 +98,38 @@ export function nextToken(l: Lexer) {
 
     readChar(l);
     return tok;
+}
+
+
+function isDigit(ch: any) : boolean {
+    return '0' <= ch && ch <= '9';
+}
+
+function readNumber(l : Lexer) : string {
+    let position = l.position;
+    while(isDigit(l.ch)) {
+        readChar(l);
+    }
+    return l.input.slice(position, l.position);
+}
+
+function readIdentifier(l: Lexer) : string {
+    let position = l.position;
+    while(isLetter(l.ch)) {
+        readChar(l);
+    }
+    return l.input.slice(position, l.position);
+}
+
+function isLetter(ch: any) : boolean{
+    return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_';
+}
+
+
+function skipWhitespace(l : Lexer) {
+    while (
+        l.ch === ' ' || l.ch === '\t' || l.ch === '\n' || l.ch === '\r'
+    ) {
+        readChar(l);
+    }
 }
