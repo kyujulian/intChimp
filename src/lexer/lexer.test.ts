@@ -63,7 +63,9 @@ test("textNextToken", () => {
         let add = fn(x,y) {
             x + y;
         };
-        let result = add(five, ten);`
+        let result = add(five, ten);
+        !-/*5;
+        5 < 10 > 5;`
     ;
 
     let tests : token.Token[] = [
@@ -210,6 +212,54 @@ test("textNextToken", () => {
         {
             type: token.SEMICOLON,
             literal: ";"
+        },
+        {
+            type: token.BANG,
+            literal: "!"
+        },
+        {
+            type: token.MINUS,
+            literal: "-"
+        },
+        {
+            type: token.SLASH,
+            literal: "/"
+        },
+        {
+            type: token.ASTERISK,
+            literal: "*"
+        },
+        {
+            type: token.INT,
+            literal: "5"
+        }, 
+        {
+            type: token.SEMICOLON,
+            literal: ";"
+        },
+        {
+            type: token.INT,
+            literal: "5"
+        },
+        {
+            type: token.LT,
+            literal: "<"
+        },
+        {
+            type: token.INT,
+            literal: "10"
+        },
+        {
+            type: token. GT, 
+            literal : ">",
+        },
+        {
+            type: token.INT,
+            literal : "5",
+        },
+        {
+            type: token.SEMICOLON,
+            literal: ";",
         },
         {
             type: token.EOF,

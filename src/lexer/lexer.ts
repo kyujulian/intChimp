@@ -75,6 +75,30 @@ export function nextToken(l: Lexer) {
             tok = newToken(token.RBRACE, l.ch);
             break;
         }
+        case '!' : {
+            tok = newToken(token.BANG, l.ch);
+            break;
+        }
+        case '-' : {
+            tok = newToken(token.MINUS, l.ch);
+            break;
+        }
+        case '/' : {
+            tok = newToken(token.SLASH, l.ch);
+            break;
+        }
+        case '*' : {
+            tok = newToken(token.ASTERISK, l.ch);
+            break;
+        }
+        case "<" : {
+            tok = newToken(token.LT, l.ch);
+            break;
+        }
+        case ">" : {
+            tok = newToken(token.GT, l.ch);
+            break;
+        }
         case 0: {
             tok = newToken(token.EOF, "");
             break;
