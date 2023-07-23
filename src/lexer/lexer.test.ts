@@ -65,7 +65,13 @@ test("textNextToken", () => {
         };
         let result = add(five, ten);
         !-/*5;
-        5 < 10 > 5;`
+        5 < 10 > 5;
+        if ( 5 < 10 ) {
+            return true;
+        } else {
+            return false;
+        }
+        `
     ;
 
     let tests : token.Token[] = [
@@ -260,6 +266,79 @@ test("textNextToken", () => {
         {
             type: token.SEMICOLON,
             literal: ";",
+        },
+        // if ( 5 < 10 ) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+        {
+            type: token.IF,
+            literal: "if",
+        },
+        {
+            type: token.LPAREN,
+            literal : "(",
+        },
+        {
+            type: token.INT,
+            literal: "5",
+        },
+        {
+            type: token.LT,
+            literal: "<",
+        },
+        {
+            type: token.INT,
+            literal: "10",
+        },
+        {
+            type: token.RPAREN,
+            literal: ")",
+        },
+        {
+            type: token.LBRACE,
+            literal: "{",
+        },
+        {
+            type: token.RETURN,
+            literal: "return",
+        },
+        {
+            type: token.TRUE, 
+            literal: "true",
+        },
+        {
+            type: token.SEMICOLON,
+            literal: ";"
+        },
+        {
+            type: token.RBRACE,
+            literal: "}"
+        },
+        {
+            type: token.ELSE,
+            literal: "else",
+        },
+        {
+            type: token.LBRACE,
+            literal: "{",
+        },
+        {
+            type: token.RETURN,
+            literal: "return",
+        },
+        {
+            type: token.FALSE,
+            literal: "false",
+        },
+        {
+            type: token.SEMICOLON,
+            literal: ";"
+        },
+        {
+            type: token.RBRACE,
+            literal: "}",
         },
         {
             type: token.EOF,

@@ -99,6 +99,34 @@ export function nextToken(l: Lexer) {
             tok = newToken(token.GT, l.ch);
             break;
         }
+        case "if" : {
+            tok = newToken(token.IF, l.ch);
+            break;
+        }
+        case "else" : {
+            tok = newToken(token.ELSE, l.ch);
+            break;
+        }
+        case "return" : {
+            tok = newToken(token.RETURN, l.ch);
+            break;
+        }
+        case "true" : {
+            tok = newToken(token.TRUE, l.ch);
+            break;
+        }
+        case "false" : {
+            tok = newToken(token.FALSE, l.ch);
+            break;
+        }
+        case "<" : {
+            tok = newToken(token.LT, l.ch);
+            break;
+        }
+        case ">" :{
+            tok = newToken(token.GT, l.ch);
+            break;
+         }
         case 0: {
             tok = newToken(token.EOF, "");
             break;

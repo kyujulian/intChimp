@@ -35,12 +35,22 @@ export const RBRACE = "}";
 //Keywords
 export const FUNCTION = "FUNCTION";
 export const LET = "LET";
+export const RETURN = "RETURN";
+export const IF = "IF";
+export const ELSE = "ELSE";
+export const TRUE = "TRUE";
+export const FALSE = "FALSE";
 
 
 
 export const keywords : Record<string, TokenType> = {
     "fn": FUNCTION,
     "let": LET,
+    "return" : RETURN,
+    "if" : IF,
+    "else" : ELSE,
+    "true" : TRUE,
+    "false" : FALSE
 }
 
 
