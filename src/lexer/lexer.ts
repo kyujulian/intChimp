@@ -42,110 +42,104 @@ export function nextToken(l: Lexer) {
 
     skipWhitespace(l);
     
-    switch(l.ch) {
-        case '=': {
-            tok = newToken(token.ASSIGN, l.ch);
-            break;
+    switch (l.ch) {
+      case "=": {
+        if (peekChar(l) === "=") {
+          let ch = l.ch;
+          readChar(l);
+          tok = newToken(token.EQ, ch + l.ch);
+        } else {
+          tok = newToken(token.ASSIGN, l.ch);
         }
-        case ';':{
-            tok = newToken(token.SEMICOLON, l.ch);
-            break;
+        break;
+      }
+      case "!": {
+        if (peekChar(l) === "=") {
+          let ch = l.ch;
+          readChar(l);
+          tok = newToken(token.NOT_EQ, ch + l.ch);
+        } else {
+          tok = newToken(token.BANG, l.ch);
         }
-        case '(':{
-            tok = newToken(token.LPAREN, l.ch);
-            break;
+        break;
+      }
+      //One chaaracter tokens
+      case "(": {
+        tok = newToken(token.LPAREN, l.ch);
+        break;
+      }
+      case ")": {
+        tok = newToken(token.RPAREN, l.ch);
+        break;
+      }
+      case ",": {
+        tok = newToken(token.COMMA, l.ch);
+        break;
+      }
+      case "+": {
+        tok = newToken(token.PLUS, l.ch);
+        break;
+      }
+      case "{": {
+        tok = newToken(token.LBRACE, l.ch);
+        break;
+      }
+      case "}": {
+        tok = newToken(token.RBRACE, l.ch);
+        break;
+      }
+      case ";": {
+        tok = newToken(token.SEMICOLON, l.ch);
+        break;
+      }
+      case "-": {
+        tok = newToken(token.MINUS, l.ch);
+        break;
+      }
+      case "/": {
+        tok = newToken(token.SLASH, l.ch);
+        break;
+      }
+      case "*": {
+        tok = newToken(token.ASTERISK, l.ch);
+        break;
+      }
+      case "<": {
+        tok = newToken(token.LT, l.ch);
+        break;
+      }
+      case ">": {
+        tok = newToken(token.GT, l.ch);
+        break;
+      }
+      case "<": {
+        tok = newToken(token.LT, l.ch);
+        break;
+      }
+      case ">": {
+        tok = newToken(token.GT, l.ch);
+        break;
+      }
+      case 0: {
+        tok = newToken(token.EOF, "");
+        break;
+      }
+      default: {
+        if (isLetter(l.ch)) {
+          let literal = readIdentifier(l);
+          tok = newToken(token.lookupIdent(literal), literal);
+          return tok;
+        } else if (isDigit(l.ch)) {
+          let literal = readNumber(l);
+          tok = newToken(token.INT, literal);
+          return tok;
+        } else {
+          console.log("illegal", l.ch, "|");
+          tok = newToken(token.ILLEGAL, l.ch);
         }
-        case ')':{
-            tok = newToken(token.RPAREN, l.ch);
-            break;
-        }
-        case ',':{
-            tok = newToken(token.COMMA, l.ch);
-            break;
-        }
-        case '+' :{
-            tok = newToken(token.PLUS, l.ch);
-            break; 
-        }
-        case '{':{
-            tok = newToken(token.LBRACE, l.ch);
-            break;
-        }
-        case '}':{
-            tok = newToken(token.RBRACE, l.ch);
-            break;
-        }
-        case '!' : {
-            tok = newToken(token.BANG, l.ch);
-            break;
-        }
-        case '-' : {
-            tok = newToken(token.MINUS, l.ch);
-            break;
-        }
-        case '/' : {
-            tok = newToken(token.SLASH, l.ch);
-            break;
-        }
-        case '*' : {
-            tok = newToken(token.ASTERISK, l.ch);
-            break;
-        }
-        case "<" : {
-            tok = newToken(token.LT, l.ch);
-            break;
-        }
-        case ">" : {
-            tok = newToken(token.GT, l.ch);
-            break;
-        }
-        case "if" : {
-            tok = newToken(token.IF, l.ch);
-            break;
-        }
-        case "else" : {
-            tok = newToken(token.ELSE, l.ch);
-            break;
-        }
-        case "return" : {
-            tok = newToken(token.RETURN, l.ch);
-            break;
-        }
-        case "true" : {
-            tok = newToken(token.TRUE, l.ch);
-            break;
-        }
-        case "false" : {
-            tok = newToken(token.FALSE, l.ch);
-            break;
-        }
-        case "<" : {
-            tok = newToken(token.LT, l.ch);
-            break;
-        }
-        case ">" :{
-            tok = newToken(token.GT, l.ch);
-            break;
-         }
-        case 0: {
-            tok = newToken(token.EOF, "");
-            break;
-        }
-        default:{
-            if (isLetter(l.ch)) {
-                let literal = readIdentifier(l);
-                tok = newToken(token.lookupIdent(literal), literal)
-                return tok;
-            } else if (isDigit(l.ch)) {
-                let literal = readNumber(l);
-                tok = newToken(token.INT, literal);
-                return tok;
-            }
-            else tok = newToken(token.ILLEGAL, l.ch);
 
-            break;
-        }
-        
+        break;
+      }
     }
 
     readChar(l);
@@ -183,5 +177,14 @@ function skipWhitespace(l : Lexer) {
         l.ch === ' ' || l.ch === '\t' || l.ch === '\n' || l.ch === '\r'
     ) {
         readChar(l);
+    }
+}
+
+
+function peekChar(l : Lexer) {
+    if (l.readPosition >= l.input.length) {
+        return 0;
+    } else {
+        return l.input[l.readPosition];
     }
 }

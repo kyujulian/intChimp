@@ -22,6 +22,8 @@ export const SLASH = "/";
 
 export const LT = "<";
 export const GT = ">";
+export const EQ = "==";
+export const NOT_EQ = "!=";
 
 //Delimiters
 export const COMMA = ",";

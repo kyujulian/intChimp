@@ -71,6 +71,9 @@ test("textNextToken", () => {
         } else {
             return false;
         }
+
+        10 == 10;
+        10 != 9;
         `
     ;
 
@@ -267,11 +270,6 @@ test("textNextToken", () => {
             type: token.SEMICOLON,
             literal: ";",
         },
-        // if ( 5 < 10 ) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
         {
             type: token.IF,
             literal: "if",
@@ -339,6 +337,38 @@ test("textNextToken", () => {
         {
             type: token.RBRACE,
             literal: "}",
+        },
+        {
+            type: token.INT,
+            literal:"10",
+        },
+        {
+            type: token.EQ,
+            literal : "==",
+        },
+        {
+            type: token.INT,
+            literal: "10",
+        },
+        {
+            type: token.SEMICOLON,
+            literal: ";",
+        },
+        {
+            type: token.INT,
+            literal: "10",
+        },
+        {
+            type: token.NOT_EQ,
+            literal: "!=",
+        },
+        {
+            type: token.INT,
+            literal: "9",
+        },
+        {
+            type: token.SEMICOLON,
+            literal: ";"
         },
         {
             type: token.EOF,
