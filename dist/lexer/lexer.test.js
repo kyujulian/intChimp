@@ -1,16 +1,9 @@
-import {describe, expect, test} from '@jest/globals';
-
+import { expect, test } from '@jest/globals';
 import * as token from '../token/token.js';
-
-
-import { Lexer,newLexer,readChar, nextToken } from './lexer.js';
-
-
-
+import { newLexer, nextToken } from './lexer.js';
 test("testing lexer", () => {
     let input = "=+,;(){}";
-
-    let tests : token.Token[] = [
+    let tests = [
         {
             type: token.ASSIGN,
             literal: "=",
@@ -43,20 +36,14 @@ test("testing lexer", () => {
             type: token.RBRACE,
             literal: "}",
         },
-
-    ]
-    
+    ];
     let l = newLexer(input);
-
-    for(let i = 0; i < tests.length ; i++) {
+    for (let i = 0; i < tests.length; i++) {
         let tok = nextToken(l);
-
         expect(tok.type).toBe(tests[i].type);
-        expect(tok.literal).toBe(tests[i].literal);         
+        expect(tok.literal).toBe(tests[i].literal);
     }
-}) 
-
-
+});
 test("textNextToken", () => {
     let input = `let five = 5;
         let ten = 10;
@@ -74,28 +61,26 @@ test("textNextToken", () => {
 
         10 == 10;
         10 != 9;
-        `
-    ;
-
-    let tests : token.Token[] = [
+        `;
+    let tests = [
         {
             type: token.LET,
             literal: "let"
         },
         {
-            type: token.IDENT ,
+            type: token.IDENT,
             literal: "five"
         },
         {
-            type: token.ASSIGN ,
+            type: token.ASSIGN,
             literal: "="
         },
         {
-            type: token.INT ,
+            type: token.INT,
             literal: "5"
         },
         {
-            type: token.SEMICOLON ,
+            type: token.SEMICOLON,
             literal: ";"
         },
         {
@@ -127,7 +112,7 @@ test("textNextToken", () => {
             literal: "add"
         },
         {
-            type: token.ASSIGN ,
+            type: token.ASSIGN,
             literal: "="
         },
         {
@@ -241,7 +226,7 @@ test("textNextToken", () => {
         {
             type: token.INT,
             literal: "5"
-        }, 
+        },
         {
             type: token.SEMICOLON,
             literal: ";"
@@ -259,12 +244,12 @@ test("textNextToken", () => {
             literal: "10"
         },
         {
-            type: token. GT, 
-            literal : ">",
+            type: token.GT,
+            literal: ">",
         },
         {
             type: token.INT,
-            literal : "5",
+            literal: "5",
         },
         {
             type: token.SEMICOLON,
@@ -276,7 +261,7 @@ test("textNextToken", () => {
         },
         {
             type: token.LPAREN,
-            literal : "(",
+            literal: "(",
         },
         {
             type: token.INT,
@@ -303,7 +288,7 @@ test("textNextToken", () => {
             literal: "return",
         },
         {
-            type: token.TRUE, 
+            type: token.TRUE,
             literal: "true",
         },
         {
@@ -340,11 +325,11 @@ test("textNextToken", () => {
         },
         {
             type: token.INT,
-            literal:"10",
+            literal: "10",
         },
         {
             type: token.EQ,
-            literal : "==",
+            literal: "==",
         },
         {
             type: token.INT,
@@ -375,13 +360,11 @@ test("textNextToken", () => {
             literal: ""
         },
     ];
-    
     let l = newLexer(input);
-
-    for(let i = 0; i < tests.length ; i++) {
+    for (let i = 0; i < tests.length; i++) {
         let tok = nextToken(l);
-
         expect(tok.type).toBe(tests[i].type);
-        expect(tok.literal).toBe(tests[i].literal);         
+        expect(tok.literal).toBe(tests[i].literal);
     }
-})
+});
+//# sourceMappingURL=lexer.test.js.map

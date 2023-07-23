@@ -1,4 +1,4 @@
-import * as token from "../token/token.ts";
+import * as token from "../token/token.js";
 
 export type Lexer = {
     input: string, 
