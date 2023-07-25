@@ -3,7 +3,7 @@ import { expect, test} from '@jest/globals';
 import * as token from '../token/token';
 
 
-import { Lexer,newLexer,readChar, nextToken } from './lexer';
+import { Lexer } from './lexer';
 
 
 
@@ -46,10 +46,10 @@ test("testing lexer", () => {
 
     ]
     
-    let l = newLexer(input);
+    let lex = new Lexer(input);
 
     for(let i = 0; i < tests.length ; i++) {
-        let tok = nextToken(l);
+        let tok = lex.nextToken();
 
         expect(tok.type).toBe(tests[i].type);
         expect(tok.literal).toBe(tests[i].literal);         
@@ -376,10 +376,10 @@ test("textNextToken", () => {
         },
     ];
     
-    let l = newLexer(input);
+    let lex = new Lexer(input);
 
     for(let i = 0; i < tests.length ; i++) {
-        let tok = nextToken(l);
+        let tok = lex.nextToken();
 
         expect(tok.type).toBe(tests[i].type);
         expect(tok.literal).toBe(tests[i].literal);         

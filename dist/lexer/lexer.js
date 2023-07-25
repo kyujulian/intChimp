@@ -23,175 +23,175 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.nextToken = exports.readChar = exports.newLexer = void 0;
+exports.Lexer = void 0;
 const token = __importStar(require("../token/token"));
-function newLexer(input) {
-    let l = {
-        input: input,
-        position: 0,
-        readPosition: 0,
-        ch: 0,
-    };
-    readChar(l);
-    return l;
-}
-exports.newLexer = newLexer;
-function readChar(l) {
-    if (l.readPosition >= l.input.length) {
-        l.ch = 0;
+class Lexer {
+    constructor(input) {
+        this.position = 0; //current position in input (poinst to current char)
+        this.readPosition = 0; // current reading position in input (after current char)
+        this.ch = "0"; // current char under examination
+        this.input = input;
+        this.readChar();
     }
-    else {
-        l.ch = l.input[l.readPosition];
+    readChar() {
+        if (this.readPosition >= this.input.length) {
+            this.ch = "0";
+        }
+        else {
+            this.ch = this.input[this.readPosition];
+        }
+        this.position = this.readPosition;
+        this.readPosition += 1;
     }
-    l.position = l.readPosition;
-    l.readPosition += 1;
+    nextToken() {
+        let tok;
+        this.skipWhitespace();
+        switch (this.ch) {
+            case "=": {
+                if (this.peekChar() === "=") {
+                    let ch = this.ch;
+                    this.readChar();
+                    tok = newToken(token.TokenType.EQ, ch + this.ch);
+                }
+                else {
+                    tok = newToken(token.TokenType.ASSIGN, this.ch);
+                }
+                break;
+            }
+            case "!": {
+                if (this.peekChar() === "=") {
+                    let ch = this.ch;
+                    this.readChar();
+                    tok = newToken(token.TokenType.NOT_EQ, ch + this.ch);
+                }
+                else {
+                    tok = newToken(token.TokenType.BANG, this.ch);
+                }
+                break;
+            }
+            //One chaaracter tokens
+            case "(": {
+                tok = newToken(token.TokenType.LPAREN, this.ch);
+                break;
+            }
+            case ")": {
+                tok = newToken(token.TokenType.RPAREN, this.ch);
+                break;
+            }
+            case ",": {
+                tok = newToken(token.TokenType.COMMA, this.ch);
+                break;
+            }
+            case "+": {
+                tok = newToken(token.TokenType.PLUS, this.ch);
+                break;
+            }
+            case "{": {
+                tok = newToken(token.TokenType.LBRACE, this.ch);
+                break;
+            }
+            case "}": {
+                tok = newToken(token.TokenType.RBRACE, this.ch);
+                break;
+            }
+            case ";": {
+                tok = newToken(token.TokenType.SEMICOLON, this.ch);
+                break;
+            }
+            case "-": {
+                tok = newToken(token.TokenType.MINUS, this.ch);
+                break;
+            }
+            case "/": {
+                tok = newToken(token.TokenType.SLASH, this.ch);
+                break;
+            }
+            case "*": {
+                tok = newToken(token.TokenType.ASTERISK, this.ch);
+                break;
+            }
+            case "<": {
+                tok = newToken(token.TokenType.LT, this.ch);
+                break;
+            }
+            case ">": {
+                tok = newToken(token.TokenType.GT, this.ch);
+                break;
+            }
+            case "<": {
+                tok = newToken(token.TokenType.LT, this.ch);
+                break;
+            }
+            case ">": {
+                tok = newToken(token.TokenType.GT, this.ch);
+                break;
+            }
+            case "0": {
+                tok = newToken(token.TokenType.EOF, "");
+                break;
+            }
+            default: {
+                if (isLetter(this.ch)) {
+                    let literal = this.readIdentifier();
+                    tok = newToken(token.lookupIdent(literal), literal);
+                    return tok;
+                }
+                else if (isDigit(this.ch)) {
+                    let literal = this.readNumber();
+                    tok = newToken(token.TokenType.INT, literal);
+                    return tok;
+                }
+                else {
+                    console.log("illegal", this.ch, "|");
+                    tok = newToken(token.TokenType.ILLEGAL, this.ch);
+                }
+                break;
+            }
+        }
+        this.readChar();
+        return tok;
+    }
+    readNumber() {
+        let position = this.position;
+        while (isDigit(this.ch)) {
+            this.readChar();
+        }
+        return this.input.slice(position, this.position);
+    }
+    readIdentifier() {
+        let position = this.position;
+        while (isLetter(this.ch)) {
+            this.readChar();
+        }
+        return this.input.slice(position, this.position);
+    }
+    skipWhitespace() {
+        while (this.ch === " " ||
+            this.ch === "\t" ||
+            this.ch === "\n" ||
+            this.ch === "\r") {
+            this.readChar();
+        }
+    }
+    peekChar() {
+        if (this.readPosition >= this.input.length) {
+            return 0;
+        }
+        else {
+            return this.input[this.readPosition];
+        }
+    }
 }
-exports.readChar = readChar;
+exports.Lexer = Lexer;
 const newToken = (tokenType, ch) => {
     return {
         type: tokenType,
         literal: ch,
     };
 };
-function nextToken(l) {
-    let tok;
-    skipWhitespace(l);
-    switch (l.ch) {
-        case "=": {
-            if (peekChar(l) === "=") {
-                let ch = l.ch;
-                readChar(l);
-                tok = newToken(token.TokenType.EQ, ch + l.ch);
-            }
-            else {
-                tok = newToken(token.TokenType.ASSIGN, l.ch);
-            }
-            break;
-        }
-        case "!": {
-            if (peekChar(l) === "=") {
-                let ch = l.ch;
-                readChar(l);
-                tok = newToken(token.TokenType.NOT_EQ, ch + l.ch);
-            }
-            else {
-                tok = newToken(token.TokenType.BANG, l.ch);
-            }
-            break;
-        }
-        //One chaaracter tokens
-        case "(": {
-            tok = newToken(token.TokenType.LPAREN, l.ch);
-            break;
-        }
-        case ")": {
-            tok = newToken(token.TokenType.RPAREN, l.ch);
-            break;
-        }
-        case ",": {
-            tok = newToken(token.TokenType.COMMA, l.ch);
-            break;
-        }
-        case "+": {
-            tok = newToken(token.TokenType.PLUS, l.ch);
-            break;
-        }
-        case "{": {
-            tok = newToken(token.TokenType.LBRACE, l.ch);
-            break;
-        }
-        case "}": {
-            tok = newToken(token.TokenType.RBRACE, l.ch);
-            break;
-        }
-        case ";": {
-            tok = newToken(token.TokenType.SEMICOLON, l.ch);
-            break;
-        }
-        case "-": {
-            tok = newToken(token.TokenType.MINUS, l.ch);
-            break;
-        }
-        case "/": {
-            tok = newToken(token.TokenType.SLASH, l.ch);
-            break;
-        }
-        case "*": {
-            tok = newToken(token.TokenType.ASTERISK, l.ch);
-            break;
-        }
-        case "<": {
-            tok = newToken(token.TokenType.LT, l.ch);
-            break;
-        }
-        case ">": {
-            tok = newToken(token.TokenType.GT, l.ch);
-            break;
-        }
-        case "<": {
-            tok = newToken(token.TokenType.LT, l.ch);
-            break;
-        }
-        case ">": {
-            tok = newToken(token.TokenType.GT, l.ch);
-            break;
-        }
-        case 0: {
-            tok = newToken(token.TokenType.EOF, "");
-            break;
-        }
-        default: {
-            if (isLetter(l.ch)) {
-                let literal = readIdentifier(l);
-                tok = newToken(token.lookupIdent(literal), literal);
-                return tok;
-            }
-            else if (isDigit(l.ch)) {
-                let literal = readNumber(l);
-                tok = newToken(token.TokenType.INT, literal);
-                return tok;
-            }
-            else {
-                console.log("illegal", l.ch, "|");
-                tok = newToken(token.TokenType.ILLEGAL, l.ch);
-            }
-            break;
-        }
-    }
-    readChar(l);
-    return tok;
-}
-exports.nextToken = nextToken;
 function isDigit(ch) {
-    return '0' <= ch && ch <= '9';
-}
-function readNumber(l) {
-    let position = l.position;
-    while (isDigit(l.ch)) {
-        readChar(l);
-    }
-    return l.input.slice(position, l.position);
-}
-function readIdentifier(l) {
-    let position = l.position;
-    while (isLetter(l.ch)) {
-        readChar(l);
-    }
-    return l.input.slice(position, l.position);
+    return "0" <= ch && ch <= "9";
 }
 function isLetter(ch) {
-    return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_';
-}
-function skipWhitespace(l) {
-    while (l.ch === ' ' || l.ch === '\t' || l.ch === '\n' || l.ch === '\r') {
-        readChar(l);
-    }
-}
-function peekChar(l) {
-    if (l.readPosition >= l.input.length) {
-        return 0;
-    }
-    else {
-        return l.input[l.readPosition];
-    }
+    return ("a" <= ch && ch <= "z") || ("A" <= ch && ch <= "Z") || ch == "_";
 }

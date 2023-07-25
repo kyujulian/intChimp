@@ -34,10 +34,10 @@ function Start() {
         output: process.stdout,
     });
     rl.on("line", (line) => {
-        const l = (0, lexer_1.newLexer)(line);
+        const lex = new lexer_1.Lexer(line);
         let tok;
         do {
-            tok = (0, lexer_1.nextToken)(l);
+            tok = lex.nextToken();
             console.log(`${JSON.stringify(tok, null, 2)}`);
         } while (tok.type !== token.TokenType.EOF);
         rl.prompt();

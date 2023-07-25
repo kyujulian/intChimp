@@ -1,5 +1,5 @@
 import * as readline from 'readline';
-import { Lexer, newLexer, nextToken } from '../lexer/lexer';
+import { Lexer } from '../lexer/lexer';
 import * as token from '../token/token';
 import { Token }  from "../token/token";
 
@@ -14,11 +14,11 @@ export function Start() {
     });
 
     rl.on("line", (line) => {
-        const l : Lexer = newLexer(line);
+        const lex : Lexer = new Lexer(line);
         let tok : Token;
 
         do {
-            tok = nextToken(l);
+            tok = lex.nextToken();
             console.log(`${JSON.stringify(tok, null, 2)}`);
         } while (tok.type !== token.TokenType.EOF);
 

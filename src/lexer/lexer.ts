@@ -1,190 +1,179 @@
 import * as token from "../token/token";
 
-export type Lexer = {
-    input: string, 
-    position: number, //current position in input (poinst to current char)
-    readPosition: number, // current reading position in input (after current char)
-    ch : any,  // current char under examination
-}
+export class Lexer {
+  input!: string;
+  position: number = 0; //current position in input (poinst to current char)
+  readPosition: number = 0; // current reading position in input (after current char)
+  ch: string = "0"; // current char under examination
 
+  constructor(input: string) {
+    this.input = input;
+    this.readChar();
+  }
 
-export function newLexer(input: string) : Lexer {
-    let l : Lexer  = {
-        input: input,
-        position: 0,
-        readPosition: 0,
-        ch: 0,
-    }
-    readChar(l);
-    return l;
-}
-
-export function readChar(l: Lexer) {
-    if (l.readPosition >= l.input.length){
-        l.ch = 0;
+  readChar() {
+    if (this.readPosition >= this.input.length) {
+      this.ch = "0";
     } else {
-        l.ch = l.input[l.readPosition];
+      this.ch = this.input[this.readPosition];
     }
-    l.position = l.readPosition;
-    l.readPosition += 1;
-}
+    this.position = this.readPosition;
+    this.readPosition += 1;
+  }
+  nextToken() {
+    let tok: token.Token;
 
+    this.skipWhitespace();
 
-const newToken = (tokenType : token.TokenType, ch: any) => {
-    return {
-        type : tokenType,
-        literal: ch,
-    }
-}
-
-export function nextToken(l: Lexer) {
-    let tok : token.Token;
-
-    skipWhitespace(l);
-    
-    switch (l.ch) {
+    switch (this.ch) {
       case "=": {
-        if (peekChar(l) === "=") {
-          let ch = l.ch;
-          readChar(l);
-          tok = newToken(token.TokenType.EQ, ch + l.ch);
+        if (this.peekChar() === "=") {
+          let ch = this.ch;
+          this.readChar();
+          tok = newToken(token.TokenType.EQ, ch + this.ch);
         } else {
-          tok = newToken(token.TokenType.ASSIGN, l.ch);
+          tok = newToken(token.TokenType.ASSIGN, this.ch);
         }
         break;
       }
       case "!": {
-        if (peekChar(l) === "=") {
-          let ch = l.ch;
-          readChar(l);
-          tok = newToken(token.TokenType.NOT_EQ, ch + l.ch);
+        if (this.peekChar() === "=") {
+          let ch = this.ch;
+          this.readChar();
+          tok = newToken(token.TokenType.NOT_EQ, ch + this.ch);
         } else {
-          tok = newToken(token.TokenType.BANG, l.ch);
+          tok = newToken(token.TokenType.BANG, this.ch);
         }
         break;
       }
       //One chaaracter tokens
       case "(": {
-        tok = newToken(token.TokenType.LPAREN, l.ch);
+        tok = newToken(token.TokenType.LPAREN, this.ch);
         break;
       }
       case ")": {
-        tok = newToken(token.TokenType.RPAREN, l.ch);
+        tok = newToken(token.TokenType.RPAREN, this.ch);
         break;
       }
       case ",": {
-        tok = newToken(token.TokenType.COMMA, l.ch);
+        tok = newToken(token.TokenType.COMMA, this.ch);
         break;
       }
       case "+": {
-        tok = newToken(token.TokenType.PLUS, l.ch);
+        tok = newToken(token.TokenType.PLUS, this.ch);
         break;
       }
       case "{": {
-        tok = newToken(token.TokenType.LBRACE, l.ch);
+        tok = newToken(token.TokenType.LBRACE, this.ch);
         break;
       }
       case "}": {
-        tok = newToken(token.TokenType.RBRACE, l.ch);
+        tok = newToken(token.TokenType.RBRACE, this.ch);
         break;
       }
       case ";": {
-        tok = newToken(token.TokenType.SEMICOLON, l.ch);
+        tok = newToken(token.TokenType.SEMICOLON, this.ch);
         break;
       }
       case "-": {
-        tok = newToken(token.TokenType.MINUS, l.ch);
+        tok = newToken(token.TokenType.MINUS, this.ch);
         break;
       }
       case "/": {
-        tok = newToken(token.TokenType.SLASH, l.ch);
+        tok = newToken(token.TokenType.SLASH, this.ch);
         break;
       }
       case "*": {
-        tok = newToken(token.TokenType.ASTERISK, l.ch);
+        tok = newToken(token.TokenType.ASTERISK, this.ch);
         break;
       }
       case "<": {
-        tok = newToken(token.TokenType.LT, l.ch);
+        tok = newToken(token.TokenType.LT, this.ch);
         break;
       }
       case ">": {
-        tok = newToken(token.TokenType.GT, l.ch);
+        tok = newToken(token.TokenType.GT, this.ch);
         break;
       }
       case "<": {
-        tok = newToken(token.TokenType.LT, l.ch);
+        tok = newToken(token.TokenType.LT, this.ch);
         break;
       }
       case ">": {
-        tok = newToken(token.TokenType.GT, l.ch);
+        tok = newToken(token.TokenType.GT, this.ch);
         break;
       }
-      case 0: {
+      case "0": {
         tok = newToken(token.TokenType.EOF, "");
         break;
       }
       default: {
-        if (isLetter(l.ch)) {
-          let literal = readIdentifier(l);
+        if (isLetter(this.ch)) {
+          let literal = this.readIdentifier();
           tok = newToken(token.lookupIdent(literal), literal);
           return tok;
-        } else if (isDigit(l.ch)) {
-          let literal = readNumber(l);
+        } else if (isDigit(this.ch)) {
+          let literal = this.readNumber();
           tok = newToken(token.TokenType.INT, literal);
           return tok;
         } else {
-          console.log("illegal", l.ch, "|");
-          tok = newToken(token.TokenType.ILLEGAL, l.ch);
+          console.log("illegal", this.ch, "|");
+          tok = newToken(token.TokenType.ILLEGAL, this.ch);
         }
 
         break;
       }
     }
 
-    readChar(l);
+    this.readChar();
     return tok;
-}
-
-
-function isDigit(ch: any) : boolean {
-    return '0' <= ch && ch <= '9';
-}
-
-function readNumber(l : Lexer) : string {
-    let position = l.position;
-    while(isDigit(l.ch)) {
-        readChar(l);
+  }
+  readNumber(): string {
+    let position = this.position;
+    while (isDigit(this.ch)) {
+      this.readChar();
     }
-    return l.input.slice(position, l.position);
-}
+    return this.input.slice(position, this.position);
+  }
 
-function readIdentifier(l: Lexer) : string {
-    let position = l.position;
-    while(isLetter(l.ch)) {
-        readChar(l);
+  readIdentifier(): string {
+    let position = this.position;
+    while (isLetter(this.ch)) {
+      this.readChar();
     }
-    return l.input.slice(position, l.position);
-}
-
-function isLetter(ch: any) : boolean{
-    return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_';
-}
-
-
-function skipWhitespace(l : Lexer) {
+    return this.input.slice(position, this.position);
+  }
+  skipWhitespace() {
     while (
-        l.ch === ' ' || l.ch === '\t' || l.ch === '\n' || l.ch === '\r'
+      this.ch === " " ||
+      this.ch === "\t" ||
+      this.ch === "\n" ||
+      this.ch === "\r"
     ) {
-        readChar(l);
+      this.readChar();
     }
+  }
+
+  peekChar() {
+    if (this.readPosition >= this.input.length) {
+      return 0;
+    } else {
+      return this.input[this.readPosition];
+    }
+  }
 }
 
+const newToken = (tokenType: token.TokenType, ch: any) => {
+  return {
+    type: tokenType,
+    literal: ch,
+  };
+};
 
-function peekChar(l : Lexer) {
-    if (l.readPosition >= l.input.length) {
-        return 0;
-    } else {
-        return l.input[l.readPosition];
-    }
+function isDigit(ch: any): boolean {
+  return "0" <= ch && ch <= "9";
+}
+
+function isLetter(ch: any): boolean {
+  return ("a" <= ch && ch <= "z") || ("A" <= ch && ch <= "Z") || ch == "_";
 }

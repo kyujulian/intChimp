@@ -62,9 +62,9 @@ const lexer_1 = require("./lexer");
             literal: "}",
         },
     ];
-    let l = (0, lexer_1.newLexer)(input);
+    let lex = new lexer_1.Lexer(input);
     for (let i = 0; i < tests.length; i++) {
-        let tok = (0, lexer_1.nextToken)(l);
+        let tok = lex.nextToken();
         (0, globals_1.expect)(tok.type).toBe(tests[i].type);
         (0, globals_1.expect)(tok.literal).toBe(tests[i].literal);
     }
@@ -385,9 +385,9 @@ const lexer_1 = require("./lexer");
             literal: ""
         },
     ];
-    let l = (0, lexer_1.newLexer)(input);
+    let lex = new lexer_1.Lexer(input);
     for (let i = 0; i < tests.length; i++) {
-        let tok = (0, lexer_1.nextToken)(l);
+        let tok = lex.nextToken();
         (0, globals_1.expect)(tok.type).toBe(tests[i].type);
         (0, globals_1.expect)(tok.literal).toBe(tests[i].literal);
     }
