@@ -1,7 +1,7 @@
 import * as readline from 'readline';
-import { Lexer, newLexer, nextToken } from '../lexer/lexer.js';
-import * as token from '../token/token.js';
-import { Token }  from "../token/token.js";
+import { Lexer, newLexer, nextToken } from '../lexer/lexer';
+import * as token from '../token/token';
+import { Token }  from "../token/token";
 
 
 const PROMPT = ">> ";
@@ -20,7 +20,7 @@ export function Start() {
         do {
             tok = nextToken(l);
             console.log(`${JSON.stringify(tok, null, 2)}`);
-        } while (tok.type !== token.EOF);
+        } while (tok.type !== token.TokenType.EOF);
 
         rl.prompt();
     })

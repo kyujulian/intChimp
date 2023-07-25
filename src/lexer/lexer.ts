@@ -1,4 +1,4 @@
-import * as token from "../token/token.js";
+import * as token from "../token/token";
 
 export type Lexer = {
     input: string, 
@@ -47,9 +47,9 @@ export function nextToken(l: Lexer) {
         if (peekChar(l) === "=") {
           let ch = l.ch;
           readChar(l);
-          tok = newToken(token.EQ, ch + l.ch);
+          tok = newToken(token.TokenType.EQ, ch + l.ch);
         } else {
-          tok = newToken(token.ASSIGN, l.ch);
+          tok = newToken(token.TokenType.ASSIGN, l.ch);
         }
         break;
       }
@@ -57,71 +57,71 @@ export function nextToken(l: Lexer) {
         if (peekChar(l) === "=") {
           let ch = l.ch;
           readChar(l);
-          tok = newToken(token.NOT_EQ, ch + l.ch);
+          tok = newToken(token.TokenType.NOT_EQ, ch + l.ch);
         } else {
-          tok = newToken(token.BANG, l.ch);
+          tok = newToken(token.TokenType.BANG, l.ch);
         }
         break;
       }
       //One chaaracter tokens
       case "(": {
-        tok = newToken(token.LPAREN, l.ch);
+        tok = newToken(token.TokenType.LPAREN, l.ch);
         break;
       }
       case ")": {
-        tok = newToken(token.RPAREN, l.ch);
+        tok = newToken(token.TokenType.RPAREN, l.ch);
         break;
       }
       case ",": {
-        tok = newToken(token.COMMA, l.ch);
+        tok = newToken(token.TokenType.COMMA, l.ch);
         break;
       }
       case "+": {
-        tok = newToken(token.PLUS, l.ch);
+        tok = newToken(token.TokenType.PLUS, l.ch);
         break;
       }
       case "{": {
-        tok = newToken(token.LBRACE, l.ch);
+        tok = newToken(token.TokenType.LBRACE, l.ch);
         break;
       }
       case "}": {
-        tok = newToken(token.RBRACE, l.ch);
+        tok = newToken(token.TokenType.RBRACE, l.ch);
         break;
       }
       case ";": {
-        tok = newToken(token.SEMICOLON, l.ch);
+        tok = newToken(token.TokenType.SEMICOLON, l.ch);
         break;
       }
       case "-": {
-        tok = newToken(token.MINUS, l.ch);
+        tok = newToken(token.TokenType.MINUS, l.ch);
         break;
       }
       case "/": {
-        tok = newToken(token.SLASH, l.ch);
+        tok = newToken(token.TokenType.SLASH, l.ch);
         break;
       }
       case "*": {
-        tok = newToken(token.ASTERISK, l.ch);
+        tok = newToken(token.TokenType.ASTERISK, l.ch);
         break;
       }
       case "<": {
-        tok = newToken(token.LT, l.ch);
+        tok = newToken(token.TokenType.LT, l.ch);
         break;
       }
       case ">": {
-        tok = newToken(token.GT, l.ch);
+        tok = newToken(token.TokenType.GT, l.ch);
         break;
       }
       case "<": {
-        tok = newToken(token.LT, l.ch);
+        tok = newToken(token.TokenType.LT, l.ch);
         break;
       }
       case ">": {
-        tok = newToken(token.GT, l.ch);
+        tok = newToken(token.TokenType.GT, l.ch);
         break;
       }
       case 0: {
-        tok = newToken(token.EOF, "");
+        tok = newToken(token.TokenType.EOF, "");
         break;
       }
       default: {
@@ -131,11 +131,11 @@ export function nextToken(l: Lexer) {
           return tok;
         } else if (isDigit(l.ch)) {
           let literal = readNumber(l);
-          tok = newToken(token.INT, literal);
+          tok = newToken(token.TokenType.INT, literal);
           return tok;
         } else {
           console.log("illegal", l.ch, "|");
-          tok = newToken(token.ILLEGAL, l.ch);
+          tok = newToken(token.TokenType.ILLEGAL, l.ch);
         }
 
         break;

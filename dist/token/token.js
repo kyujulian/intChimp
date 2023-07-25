@@ -1,47 +1,52 @@
-export const ILLEGAL = 'ILLEGAL';
-export const EOF = 'EOF';
-// Identifiers + literals
-export const IDENT = "IDENT"; // add, foobar, x, y...
-export const INT = "INT";
-//Operators
-export const ASSIGN = "=";
-export const PLUS = "+";
-export const MINUS = "-";
-export const BANG = "!";
-export const ASTERISK = "*";
-export const SLASH = "/";
-export const LT = "<";
-export const GT = ">";
-export const EQ = "==";
-export const NOT_EQ = "!=";
-//Delimiters
-export const COMMA = ",";
-export const SEMICOLON = ";";
-export const LPAREN = "(";
-export const RPAREN = ")";
-export const LBRACE = "{";
-export const RBRACE = "}";
-//Keywords
-export const FUNCTION = "FUNCTION";
-export const LET = "LET";
-export const RETURN = "RETURN";
-export const IF = "IF";
-export const ELSE = "ELSE";
-export const TRUE = "TRUE";
-export const FALSE = "FALSE";
-export const keywords = {
-    "fn": FUNCTION,
-    "let": LET,
-    "return": RETURN,
-    "if": IF,
-    "else": ELSE,
-    "true": TRUE,
-    "false": FALSE
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.lookupIdent = exports.keywords = exports.TokenType = void 0;
+exports.TokenType = {
+    ILLEGAL: 'ILLEGAL',
+    EOF: 'EOF',
+    // Identifiers + literals
+    IDENT: "IDENT",
+    INT: "INT",
+    //Operators
+    ASSIGN: "=",
+    PLUS: "+",
+    MINUS: "-",
+    BANG: "!",
+    ASTERISK: "*",
+    SLASH: "/",
+    LT: "<",
+    GT: ">",
+    EQ: "==",
+    NOT_EQ: "!=",
+    //Delimiters
+    COMMA: ",",
+    SEMICOLON: ";",
+    LPAREN: "(",
+    RPAREN: ")",
+    LBRACE: "{",
+    RBRACE: "}",
+    //Keywords
+    FUNCTION: "FUNCTION",
+    LET: "LET",
+    RETURN: "RETURN",
+    IF: "IF",
+    ELSE: "ELSE",
+    TRUE: "TRUE",
+    FALSE: "FALSE",
 };
-export function lookupIdent(ident) {
-    const tok = keywords[ident];
+exports.keywords = {
+    "fn": exports.TokenType.FUNCTION,
+    "let": exports.TokenType.LET,
+    "return": exports.TokenType.RETURN,
+    "if": exports.TokenType.IF,
+    "else": exports.TokenType.ELSE,
+    "true": exports.TokenType.TRUE,
+    "false": exports.TokenType.FALSE
+};
+function lookupIdent(ident) {
+    const tok = exports.keywords[ident];
     if (tok !== undefined)
         return tok;
     return "IDENT";
 }
-//# sourceMappingURL=token.js.map
+exports.lookupIdent = lookupIdent;

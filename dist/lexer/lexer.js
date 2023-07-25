@@ -1,5 +1,31 @@
-import * as token from "../token/token.js";
-export function newLexer(input) {
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.nextToken = exports.readChar = exports.newLexer = void 0;
+const token = __importStar(require("../token/token"));
+function newLexer(input) {
     let l = {
         input: input,
         position: 0,
@@ -9,7 +35,8 @@ export function newLexer(input) {
     readChar(l);
     return l;
 }
-export function readChar(l) {
+exports.newLexer = newLexer;
+function readChar(l) {
     if (l.readPosition >= l.input.length) {
         l.ch = 0;
     }
@@ -19,13 +46,14 @@ export function readChar(l) {
     l.position = l.readPosition;
     l.readPosition += 1;
 }
+exports.readChar = readChar;
 const newToken = (tokenType, ch) => {
     return {
         type: tokenType,
         literal: ch,
     };
 };
-export function nextToken(l) {
+function nextToken(l) {
     let tok;
     skipWhitespace(l);
     switch (l.ch) {
@@ -33,10 +61,10 @@ export function nextToken(l) {
             if (peekChar(l) === "=") {
                 let ch = l.ch;
                 readChar(l);
-                tok = newToken(token.EQ, ch + l.ch);
+                tok = newToken(token.TokenType.EQ, ch + l.ch);
             }
             else {
-                tok = newToken(token.ASSIGN, l.ch);
+                tok = newToken(token.TokenType.ASSIGN, l.ch);
             }
             break;
         }
@@ -44,72 +72,72 @@ export function nextToken(l) {
             if (peekChar(l) === "=") {
                 let ch = l.ch;
                 readChar(l);
-                tok = newToken(token.NOT_EQ, ch + l.ch);
+                tok = newToken(token.TokenType.NOT_EQ, ch + l.ch);
             }
             else {
-                tok = newToken(token.BANG, l.ch);
+                tok = newToken(token.TokenType.BANG, l.ch);
             }
             break;
         }
         //One chaaracter tokens
         case "(": {
-            tok = newToken(token.LPAREN, l.ch);
+            tok = newToken(token.TokenType.LPAREN, l.ch);
             break;
         }
         case ")": {
-            tok = newToken(token.RPAREN, l.ch);
+            tok = newToken(token.TokenType.RPAREN, l.ch);
             break;
         }
         case ",": {
-            tok = newToken(token.COMMA, l.ch);
+            tok = newToken(token.TokenType.COMMA, l.ch);
             break;
         }
         case "+": {
-            tok = newToken(token.PLUS, l.ch);
+            tok = newToken(token.TokenType.PLUS, l.ch);
             break;
         }
         case "{": {
-            tok = newToken(token.LBRACE, l.ch);
+            tok = newToken(token.TokenType.LBRACE, l.ch);
             break;
         }
         case "}": {
-            tok = newToken(token.RBRACE, l.ch);
+            tok = newToken(token.TokenType.RBRACE, l.ch);
             break;
         }
         case ";": {
-            tok = newToken(token.SEMICOLON, l.ch);
+            tok = newToken(token.TokenType.SEMICOLON, l.ch);
             break;
         }
         case "-": {
-            tok = newToken(token.MINUS, l.ch);
+            tok = newToken(token.TokenType.MINUS, l.ch);
             break;
         }
         case "/": {
-            tok = newToken(token.SLASH, l.ch);
+            tok = newToken(token.TokenType.SLASH, l.ch);
             break;
         }
         case "*": {
-            tok = newToken(token.ASTERISK, l.ch);
+            tok = newToken(token.TokenType.ASTERISK, l.ch);
             break;
         }
         case "<": {
-            tok = newToken(token.LT, l.ch);
+            tok = newToken(token.TokenType.LT, l.ch);
             break;
         }
         case ">": {
-            tok = newToken(token.GT, l.ch);
+            tok = newToken(token.TokenType.GT, l.ch);
             break;
         }
         case "<": {
-            tok = newToken(token.LT, l.ch);
+            tok = newToken(token.TokenType.LT, l.ch);
             break;
         }
         case ">": {
-            tok = newToken(token.GT, l.ch);
+            tok = newToken(token.TokenType.GT, l.ch);
             break;
         }
         case 0: {
-            tok = newToken(token.EOF, "");
+            tok = newToken(token.TokenType.EOF, "");
             break;
         }
         default: {
@@ -120,12 +148,12 @@ export function nextToken(l) {
             }
             else if (isDigit(l.ch)) {
                 let literal = readNumber(l);
-                tok = newToken(token.INT, literal);
+                tok = newToken(token.TokenType.INT, literal);
                 return tok;
             }
             else {
                 console.log("illegal", l.ch, "|");
-                tok = newToken(token.ILLEGAL, l.ch);
+                tok = newToken(token.TokenType.ILLEGAL, l.ch);
             }
             break;
         }
@@ -133,6 +161,7 @@ export function nextToken(l) {
     readChar(l);
     return tok;
 }
+exports.nextToken = nextToken;
 function isDigit(ch) {
     return '0' <= ch && ch <= '9';
 }
@@ -166,4 +195,3 @@ function peekChar(l) {
         return l.input[l.readPosition];
     }
 }
-//# sourceMappingURL=lexer.js.map

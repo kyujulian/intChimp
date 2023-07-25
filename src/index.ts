@@ -1,7 +1,6 @@
-import fs from 'fs';
 import * as os from "os";
 
-import * as repl from "./repl/repl.js";
+import * as repl from "./repl/repl";
 
 
 async function main() {

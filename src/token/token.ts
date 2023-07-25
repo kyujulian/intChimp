@@ -4,55 +4,57 @@ export type Token = {
     type: TokenType;
     literal: string;
 }
+export const TokenType = {
+    ILLEGAL : 'ILLEGAL',
+    EOF : 'EOF',
+    
+    // Identifiers + literals
+    IDENT : "IDENT", // add, foobar, x, y...
+    INT : "INT",
+    
+    //Operators
+    ASSIGN : "=",
+    PLUS : "+",
+    MINUS :  "-",
+    BANG : "!",
+    ASTERISK : "*",
+    SLASH : "/",
+    
+    LT : "<",
+    GT : ">",
+    EQ : "==",
+    NOT_EQ : "!=",
+    
+    //Delimiters
+    COMMA : ",",
+    SEMICOLON : ";",
+    
+    LPAREN : "(",
+    RPAREN : ")",
+    LBRACE : "{",
+    RBRACE : "}",
+    
+    //Keywords
+    FUNCTION : "FUNCTION",
+    LET : "LET",
+    RETURN : "RETURN",
+    IF : "IF",
+    ELSE : "ELSE",
+    TRUE : "TRUE",
+    FALSE : "FALSE",
+} as const;
 
-export const ILLEGAL = 'ILLEGAL';
-export const EOF = 'EOF';
-
-// Identifiers + literals
-export const IDENT = "IDENT"; // add, foobar, x, y...
-export const INT = "INT";
-
-//Operators
-export const ASSIGN = "=";
-export const PLUS = "+";
-export const MINUS =  "-";
-export const BANG = "!";
-export const ASTERISK = "*";
-export const SLASH = "/";
-
-export const LT = "<";
-export const GT = ">";
-export const EQ = "==";
-export const NOT_EQ = "!=";
-
-//Delimiters
-export const COMMA = ",";
-export const SEMICOLON = ";";
-
-export const LPAREN = "(";
-export const RPAREN = ")";
-export const LBRACE = "{";
-export const RBRACE = "}";
-
-//Keywords
-export const FUNCTION = "FUNCTION";
-export const LET = "LET";
-export const RETURN = "RETURN";
-export const IF = "IF";
-export const ELSE = "ELSE";
-export const TRUE = "TRUE";
-export const FALSE = "FALSE";
 
 
 
 export const keywords : Record<string, TokenType> = {
-    "fn": FUNCTION,
-    "let": LET,
-    "return" : RETURN,
-    "if" : IF,
-    "else" : ELSE,
-    "true" : TRUE,
-    "false" : FALSE
+    "fn": TokenType.FUNCTION,
+    "let": TokenType.LET,
+    "return" : TokenType.RETURN,
+    "if" : TokenType.IF,
+    "else" : TokenType.ELSE,
+    "true" : TokenType.TRUE,
+    "false" : TokenType.FALSE
 }
 
 

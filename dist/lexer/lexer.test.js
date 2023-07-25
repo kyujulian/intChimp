@@ -1,50 +1,75 @@
-import { expect, test } from '@jest/globals';
-import * as token from '../token/token.js';
-import { newLexer, nextToken } from './lexer.js';
-test("testing lexer", () => {
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const globals_1 = require("@jest/globals");
+const token = __importStar(require("../token/token"));
+const lexer_1 = require("./lexer");
+(0, globals_1.test)("testing lexer", () => {
     let input = "=+,;(){}";
     let tests = [
         {
-            type: token.ASSIGN,
+            type: token.TokenType.ASSIGN,
             literal: "=",
         },
         {
-            type: token.PLUS,
+            type: token.TokenType.PLUS,
             literal: "+",
         },
         {
-            type: token.COMMA,
+            type: token.TokenType.COMMA,
             literal: ",",
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";",
         },
         {
-            type: token.LPAREN,
+            type: token.TokenType.LPAREN,
             literal: "(",
         },
         {
-            type: token.RPAREN,
+            type: token.TokenType.RPAREN,
             literal: ")",
         },
         {
-            type: token.LBRACE,
+            type: token.TokenType.LBRACE,
             literal: "{",
         },
         {
-            type: token.RBRACE,
+            type: token.TokenType.RBRACE,
             literal: "}",
         },
     ];
-    let l = newLexer(input);
+    let l = (0, lexer_1.newLexer)(input);
     for (let i = 0; i < tests.length; i++) {
-        let tok = nextToken(l);
-        expect(tok.type).toBe(tests[i].type);
-        expect(tok.literal).toBe(tests[i].literal);
+        let tok = (0, lexer_1.nextToken)(l);
+        (0, globals_1.expect)(tok.type).toBe(tests[i].type);
+        (0, globals_1.expect)(tok.literal).toBe(tests[i].literal);
     }
 });
-test("textNextToken", () => {
+(0, globals_1.test)("textNextToken", () => {
     let input = `let five = 5;
         let ten = 10;
         let add = fn(x,y) {
@@ -64,307 +89,306 @@ test("textNextToken", () => {
         `;
     let tests = [
         {
-            type: token.LET,
+            type: token.TokenType.LET,
             literal: "let"
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "five"
         },
         {
-            type: token.ASSIGN,
+            type: token.TokenType.ASSIGN,
             literal: "="
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "5"
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";"
         },
         {
-            type: token.LET,
+            type: token.TokenType.LET,
             literal: "let"
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "ten"
         },
         {
-            type: token.ASSIGN,
+            type: token.TokenType.ASSIGN,
             literal: "="
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "10"
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";"
         },
         {
-            type: token.LET,
+            type: token.TokenType.LET,
             literal: "let"
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "add"
         },
         {
-            type: token.ASSIGN,
+            type: token.TokenType.ASSIGN,
             literal: "="
         },
         {
-            type: token.FUNCTION,
+            type: token.TokenType.FUNCTION,
             literal: "fn"
         },
         {
-            type: token.LPAREN,
+            type: token.TokenType.LPAREN,
             literal: "("
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "x"
         },
         {
-            type: token.COMMA,
+            type: token.TokenType.COMMA,
             literal: ","
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "y"
         },
         {
-            type: token.RPAREN,
+            type: token.TokenType.RPAREN,
             literal: ")"
         },
         {
-            type: token.LBRACE,
+            type: token.TokenType.LBRACE,
             literal: "{"
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "x"
         },
         {
-            type: token.PLUS,
+            type: token.TokenType.PLUS,
             literal: "+"
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "y"
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";"
         },
         {
-            type: token.RBRACE,
+            type: token.TokenType.RBRACE,
             literal: "}"
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";"
         },
         {
-            type: token.LET,
+            type: token.TokenType.LET,
             literal: "let"
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "result"
         },
         {
-            type: token.ASSIGN,
+            type: token.TokenType.ASSIGN,
             literal: "="
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "add"
         },
         {
-            type: token.LPAREN,
+            type: token.TokenType.LPAREN,
             literal: "("
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "five"
         },
         {
-            type: token.COMMA,
+            type: token.TokenType.COMMA,
             literal: ","
         },
         {
-            type: token.IDENT,
+            type: token.TokenType.IDENT,
             literal: "ten"
         },
         {
-            type: token.RPAREN,
+            type: token.TokenType.RPAREN,
             literal: ")"
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";"
         },
         {
-            type: token.BANG,
+            type: token.TokenType.BANG,
             literal: "!"
         },
         {
-            type: token.MINUS,
+            type: token.TokenType.MINUS,
             literal: "-"
         },
         {
-            type: token.SLASH,
+            type: token.TokenType.SLASH,
             literal: "/"
         },
         {
-            type: token.ASTERISK,
+            type: token.TokenType.ASTERISK,
             literal: "*"
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "5"
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";"
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "5"
         },
         {
-            type: token.LT,
+            type: token.TokenType.LT,
             literal: "<"
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "10"
         },
         {
-            type: token.GT,
+            type: token.TokenType.GT,
             literal: ">",
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "5",
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";",
         },
         {
-            type: token.IF,
+            type: token.TokenType.IF,
             literal: "if",
         },
         {
-            type: token.LPAREN,
+            type: token.TokenType.LPAREN,
             literal: "(",
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "5",
         },
         {
-            type: token.LT,
+            type: token.TokenType.LT,
             literal: "<",
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "10",
         },
         {
-            type: token.RPAREN,
+            type: token.TokenType.RPAREN,
             literal: ")",
         },
         {
-            type: token.LBRACE,
+            type: token.TokenType.LBRACE,
             literal: "{",
         },
         {
-            type: token.RETURN,
+            type: token.TokenType.RETURN,
             literal: "return",
         },
         {
-            type: token.TRUE,
+            type: token.TokenType.TRUE,
             literal: "true",
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";"
         },
         {
-            type: token.RBRACE,
+            type: token.TokenType.RBRACE,
             literal: "}"
         },
         {
-            type: token.ELSE,
+            type: token.TokenType.ELSE,
             literal: "else",
         },
         {
-            type: token.LBRACE,
+            type: token.TokenType.LBRACE,
             literal: "{",
         },
         {
-            type: token.RETURN,
+            type: token.TokenType.RETURN,
             literal: "return",
         },
         {
-            type: token.FALSE,
+            type: token.TokenType.FALSE,
             literal: "false",
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";"
         },
         {
-            type: token.RBRACE,
+            type: token.TokenType.RBRACE,
             literal: "}",
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "10",
         },
         {
-            type: token.EQ,
+            type: token.TokenType.EQ,
             literal: "==",
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "10",
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";",
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "10",
         },
         {
-            type: token.NOT_EQ,
+            type: token.TokenType.NOT_EQ,
             literal: "!=",
         },
         {
-            type: token.INT,
+            type: token.TokenType.INT,
             literal: "9",
         },
         {
-            type: token.SEMICOLON,
+            type: token.TokenType.SEMICOLON,
             literal: ";"
         },
         {
-            type: token.EOF,
+            type: token.TokenType.EOF,
             literal: ""
         },
     ];
-    let l = newLexer(input);
+    let l = (0, lexer_1.newLexer)(input);
     for (let i = 0; i < tests.length; i++) {
-        let tok = nextToken(l);
-        expect(tok.type).toBe(tests[i].type);
-        expect(tok.literal).toBe(tests[i].literal);
+        let tok = (0, lexer_1.nextToken)(l);
+        (0, globals_1.expect)(tok.type).toBe(tests[i].type);
+        (0, globals_1.expect)(tok.literal).toBe(tests[i].literal);
     }
 });
-//# sourceMappingURL=lexer.test.js.map
