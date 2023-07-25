@@ -3,7 +3,7 @@ import { expect, test} from '@jest/globals';
 import * as token from '../token/token';
 
 
-import { Lexer } from './lexer';
+import { Lexer } from '../lexer/lexer';
 
 
 
