@@ -1,13 +1,13 @@
 import { Token } from "../token/token";
 
 interface Node {
-  tokenLiteral(): string;
+  tokenLiteral(): string ;
 }
 
 export interface Statement {
   node: Node;
   statementNode(): void;
-  tokenLiteral(): string;
+  tokenLiteral(): string ;
 }
 
 interface Expression {
@@ -28,42 +28,55 @@ export class Program {
 }
 
 export class Identifier {
-  token!: Token;
-  value!: string;
-  constructor(props?: { token?: Token; value?: string }) {
-    if (props) {
-      if (props.token != undefined) this.token = props.token;
-      if (props.value != undefined) this.value = props.value;
-    }
-  }
+  private token!: Token;
+  private value!: string;
+  constructor(name: Token, value: string) {
+    this.token = name;
+    this.value = value;  
+}
 
+  getValue() {
+    return this.value;
+  }
   expressionNode(): void {
     throw new Error("Method not implemented.");
   }
   tokenLiteral(): string {
-    if(this.token != undefined) {
-        return this.token.literal;
-    }
-    return "";
+    return this.token.literal;
   }
 }
 
 export class LetStatement implements Statement {
   node!: Node;
-  token!: Token;
-  name!: Identifier;
-  value!: Expression;
+  private token!: Token;
+  private name!: Identifier;
+  private value!: Expression | null;
 
-  constructor(props: { token?: Token; name?: Identifier; value?: Expression }) {
-    if (props.token) this.token = props.token;
-    if (props.name) this.name = props.name;
-    if (props.value) this.value = props.value;
+  constructor({
+    token,
+    name,
+    value,
+  }: {
+    token: Token;
+    name: Identifier;
+    value: Expression | null;
+  }) {
+    this.token = token;
+    this.name = name;
+    this.value = value;
+  }
+
+  getName() {
+    return this.name;
+  }
+  setName(name: Identifier) {
+    this.name = name;
   }
 
   statementNode(): void {
     throw new Error("Method not implemented.");
   }
   tokenLiteral(): string {
-      return this.token.literal;
+    return this.token.literal;
   }
-}
+}    

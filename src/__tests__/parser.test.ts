@@ -45,11 +45,11 @@ function testLetStatement(stmt : ast.Statement, name : string) : boolean {
   }
 
   if (stmt instanceof ast.LetStatement) {
-    if (stmt.name.value !== name) {
-      throw new Error("letStmt.name.value not '" + name + "'. got=" + stmt.name.value);
+    if (stmt.getName().getValue() !== name) {
+      throw new Error("letStmt.name.value not '" + name + "'. got=" + stmt.getName().getValue());
     }
-    if (stmt.name.tokenLiteral() !== name) {
-      throw new Error("letStmt.name.tokenLiteral() not '" + name + "'. got=" + stmt.name.tokenLiteral());
+    if (stmt.getName().tokenLiteral() !== name) {
+      throw new Error("letStmt.name.tokenLiteral() not '" + name + "'. got=" + stmt.getName().tokenLiteral());
     }
 
   } else {

@@ -48,13 +48,14 @@ export class Parser {
     }
 
     parseLetStatement() : ast.LetStatement | null {
-        let stmt = new ast.LetStatement({token: this.curToken});
+        let name = new ast.Identifier(this.curToken, this.curToken.literal);
+        let stmt = new ast.LetStatement({ token: this.curToken ,name: name, value: null});
 
         if (!this.expectPeek(token.TokenType.IDENT)) {
             return null;
         }
 
-        stmt.name = new ast.Identifier({token: this.curToken, value: this.curToken.literal});
+        stmt.setName(new ast.Identifier(this.curToken, this.curToken.literal));
         return stmt;
     }
 
