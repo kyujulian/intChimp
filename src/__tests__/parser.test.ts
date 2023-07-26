@@ -76,3 +76,40 @@ function checkParserErrors(pars : parser.Parser) {
   let errors : string = pars.getErrors().join("\n");
   throw new Error("Parser has " + pars.getErrors().length + " errors: \n" + errors)
 }
+
+
+test("Return statements", () => {
+  let input = ` 
+  return 5;
+  return 10;
+  return 993322;
+  `;
+
+  let lex = new lexer.Lexer(input);
+  let pars = new parser.Parser(lex);
+
+
+  let program = pars.parseProgram();
+  checkParserErrors(pars);
+
+
+  if (program.statements.length !== 3) {
+    expect(program.statements.length).toBe(3);
+    throw new Error(
+      "program.statements does not contain 3 statements. got:" +
+        program.statements.length
+    );
+  }
+
+  for (let statement of program.statements) {
+    if ( statement instanceof ast.ReturnStatement) {
+      if (statement.tokenLiteral() !== "return") {
+        expect(statement.tokenLiteral()).toBe("return");
+        throw new Error(
+          "returnStmt.tokenLiteral not 'return', got " +
+            statement.tokenLiteral()
+        );
+      }
+    }
+  }
+})

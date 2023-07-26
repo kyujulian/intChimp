@@ -80,3 +80,19 @@ export class LetStatement implements Statement {
     return this.token.literal;
   }
 }    
+
+
+export class ReturnStatement implements Statement {
+    node!: Node;
+    token!: Token;
+    returnValue: Expression | null;
+    constructor( returnValue : Expression) {
+        this.returnValue = returnValue
+    }
+
+    statementNode() {}
+
+    tokenLiteral() : string{
+        return this.token.literal;
+    }
+}
