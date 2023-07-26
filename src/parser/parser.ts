@@ -46,9 +46,23 @@ export class Parser {
             case (token.TokenType.LET):{
                 return this.parseLetStatement();
             }
+            case (token.TokenType.RETURN):{
+                return this.parseReturnStatement();
+            }
             default:
                 return null;
         }
+    }
+
+
+    parseReturnStatement() : ast.ReturnStatement | null {
+        let stmt = new ast.ReturnStatement({ token: this.curToken});
+        this.nextToken();
+
+        while(!this.curTokenIs(token.TokenType.SEMICOLON)) {
+            this.nextToken();
+        }
+        return stmt;
     }
 
     parseLetStatement() : ast.LetStatement | null {

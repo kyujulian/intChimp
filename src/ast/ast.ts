@@ -1,13 +1,13 @@
 import { Token } from "../token/token";
 
 interface Node {
-  tokenLiteral(): string ;
+  tokenLiteral(): string;
 }
 
 export interface Statement {
   node: Node;
   statementNode(): void;
-  tokenLiteral(): string ;
+  tokenLiteral(): string;
 }
 
 interface Expression {
@@ -32,8 +32,8 @@ export class Identifier {
   private value!: string;
   constructor(name: Token, value: string) {
     this.token = name;
-    this.value = value;  
-}
+    this.value = value;
+  }
 
   getValue() {
     return this.value;
@@ -79,20 +79,22 @@ export class LetStatement implements Statement {
   tokenLiteral(): string {
     return this.token.literal;
   }
-}    
-
+}
 
 export class ReturnStatement implements Statement {
-    node!: Node;
-    token!: Token;
-    returnValue: Expression | null;
-    constructor( returnValue : Expression) {
-        this.returnValue = returnValue
-    }
+  node!: Node;
+  token!: Token;
+  returnValue: Expression | null = null;
+  constructor({token,returnValue}: {
+    token: Token;
+    returnValue?: Expression | null;
+  }) {
+    this.token = token;
+    if (returnValue) this.returnValue = returnValue;
+  }
+  statementNode() {}
 
-    statementNode() {}
-
-    tokenLiteral() : string{
-        return this.token.literal;
-    }
+  tokenLiteral(): string {
+    return this.token.literal;
+  }
 }
