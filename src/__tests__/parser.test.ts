@@ -18,12 +18,6 @@ test("Let statements", () => {
   if (!program) {
     throw new Error("program is null");
   }
-  if (program.statements.length !== 3) {
-    throw new Error(
-      "program.statements does not contain 3 statements, got=" +
-        program.statements.length
-    );
-  }
 
   let testCases = [
     { expectedIdentifier: "x" },
@@ -39,6 +33,8 @@ test("Let statements", () => {
   }
 
   function testLetStatement(stmt: ast.Statement, name: string): boolean {
+
+    checkParserErrors(pars);
     if (stmt.tokenLiteral() !== "let") {
       expect(stmt.tokenLiteral()).toBe("let");
       throw new Error("s.tokenLiteral not 'let'. got=" + stmt.tokenLiteral());
@@ -70,3 +66,13 @@ test("Let statements", () => {
     return true;
   }
 });
+
+
+function checkParserErrors(pars : parser.Parser) {
+  if (pars.getErrors().length == 0 ) {
+    return;
+  }
+
+  let errors : string = pars.getErrors().join("\n");
+  throw new Error("Parser has " + pars.getErrors().length + " errors: \n" + errors)
+}

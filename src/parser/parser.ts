@@ -8,6 +8,7 @@ export class Parser {
     lex!: lexer.Lexer;
     curToken!: token.Token;
     peekToken!: token.Token;
+    private errors: string [] = [];
 
 
     constructor( lex : lexer.Lexer) {
@@ -15,6 +16,9 @@ export class Parser {
         this.nextToken();
         this.nextToken();
     }
+
+    
+
 
     nextToken()  {
         this.curToken = this.peekToken;
@@ -56,6 +60,15 @@ export class Parser {
         }
 
         stmt.setName(new ast.Identifier(this.curToken, this.curToken.literal));
+
+        if (!this.expectPeek(token.TokenType.ASSIGN)) {
+            return null;
+        }
+
+        if (!this.curTokenIs(token.TokenType.SEMICOLON)) {
+            this.nextToken();
+        }
+
         return stmt;
     }
 
@@ -72,9 +85,20 @@ export class Parser {
             this.nextToken();
             return true;
         } else {
+            this.peekError(token)
             return false;
         }
 
+    }
+
+    // == ERRORS ==
+    getErrors() {
+        return this.errors;
+    }
+
+    peekError(token : token.TokenType) {
+        let msg = "expected next token to be" + this.peekToken.type + " got " + token + " instead";
+        this.errors.push(msg);
     }
 
 
