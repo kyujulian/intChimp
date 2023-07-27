@@ -2,6 +2,7 @@ import { Token } from "../token/token";
 
 interface Node {
   tokenLiteral(): string;
+  toString() : string;
 }
 
 export interface Statement {
@@ -25,6 +26,13 @@ export class Program {
       return "";
     }
   }
+  toString() : string {
+    let out = "";
+    for(let i = 0; i < this.statements.length; ++i) {
+        out += this.statements[i].toString();
+    }
+    return out;
+  }
 }
 
 export class Identifier {
@@ -43,6 +51,9 @@ export class Identifier {
   }
   tokenLiteral(): string {
     return this.token.literal;
+  }
+  toString() : string {
+    return this.value;
   }
 }
 
@@ -79,6 +90,18 @@ export class LetStatement implements Statement {
   tokenLiteral(): string {
     return this.token.literal;
   }
+  toString() : string {
+        let out = "";
+        out += this.tokenLiteral() + " ";
+        out += this.name.toString();
+        out += " = ";
+
+        if (this.value) {
+            out += this.value.toString();
+        }
+        out += ";";
+        return out;
+  }
 }
 
 export class ReturnStatement implements Statement {
@@ -97,4 +120,38 @@ export class ReturnStatement implements Statement {
   tokenLiteral(): string {
     return this.token.literal;
   }
+  toString() : string {
+    let out = "";
+    out += this.tokenLiteral() + " ";
+    if (this.returnValue) {
+        out += this.returnValue.toString();
+    }
+
+    out += ";";
+    return out;
+  }
+}
+
+
+export class ExpressionStatement implements Statement {
+    node!: Node;
+    token : Token;
+    Expression : Expression | null = null;
+    constructor({token: token, Expression: Expression} : {token: Token, Expression: Expression}) {
+        this.token = token;
+        this.Expression = Expression;
+    }
+
+
+    statementNode(){};
+    tokenLiteral(): string {
+        return this.token.literal;
+    }
+    toString() : string {
+        if (this.Expression) {
+            return this.Expression.toString();
+        }
+        return "";
+    }
+
 }
