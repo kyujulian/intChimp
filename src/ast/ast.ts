@@ -18,6 +18,10 @@ interface Expression {
 
 export class Program {
   public statements: Statement[] = [];
+  constructor(statements?: Statement[]) {
+    if (statements)
+      this.statements = statements;
+  }
 
   tokenLiteral(): string {
     if (this.statements.length > 0) {
@@ -61,7 +65,7 @@ export class LetStatement implements Statement {
   node!: Node;
   private token!: Token;
   private name!: Identifier;
-  private value!: Expression | null;
+  private value!: Expression | Identifier | null ;
 
   constructor({
     token,
@@ -70,7 +74,7 @@ export class LetStatement implements Statement {
   }: {
     token: Token;
     name: Identifier;
-    value: Expression | null;
+    value: Expression | Identifier | null;
   }) {
     this.token = token;
     this.name = name;
