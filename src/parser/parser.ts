@@ -64,7 +64,7 @@ export class Parser {
     }
     parseIdentifier() : ast.Identifier {
         //cannot call this inside this function
-        return new ast.Identifier(this.curToken, this.curToken.literal);
+        return new ast.Identifier({token: this.curToken, value: this.curToken.literal});
     }
 
     parseStatement () : ast.Statement | null {
@@ -75,11 +75,9 @@ export class Parser {
             case (token.TokenType.RETURN):{
                 return this.parseReturnStatement();
             }
-            case(token.TokenType.IDENT): {
+            default: {
                 return this.parseExpressionStatement();
             }
-            default:
-                return null;
         }
     }
     parseExpression() : ast.Expression {
@@ -117,20 +115,20 @@ export class Parser {
     }
 
     parseLetStatement() : ast.LetStatement | null {
-        let name = new ast.Identifier(this.curToken, this.curToken.literal);
+        let name = new ast.Identifier({token: this.curToken, value: this.curToken.literal});
         let stmt = new ast.LetStatement({ token: this.curToken ,name: name, value: null});
 
         if (!this.expectPeek(token.TokenType.IDENT)) {
             return null;
         }
 
-        stmt.setName(new ast.Identifier(this.curToken, this.curToken.literal));
+        stmt.setName(new ast.Identifier({token: this.curToken,value: this.curToken.literal}));
 
         if (!this.expectPeek(token.TokenType.ASSIGN)) {
             return null;
         }
 
-        if (!this.curTokenIs(token.TokenType.SEMICOLON)) {
+        while (!this.curTokenIs(token.TokenType.SEMICOLON)) {
             this.nextToken();
         }
 

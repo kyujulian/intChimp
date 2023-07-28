@@ -42,11 +42,11 @@ export class Program implements Node{
   }
 }
 
-export class Identifier implements Node{
+export class Identifier implements Node {
   private token!: Token;
   private value!: string;
-  constructor(name: Token, value: string) {
-    this.token = name;
+  constructor({ token, value }: { token: Token; value: string }) {
+    this.token = token;
     this.value = value;
   }
 
@@ -59,7 +59,7 @@ export class Identifier implements Node{
   tokenLiteral(): string {
     return this.token.literal;
   }
-  toString() : string {
+  toString(): string {
     return this.value;
   }
 }

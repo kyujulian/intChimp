@@ -2,6 +2,7 @@ import * as ast from "../ast/ast";
 import * as lexer from "../lexer/lexer";
 import { expect, test } from "@jest/globals";
 import * as parser from "../parser/parser";
+import * as token from "../token/token";
 
 test("Let statements", () => {
   let input = `
@@ -159,4 +160,21 @@ test("Identifier Expression", () => {
     }
   }
 
+})
+
+
+test( "Strings " , () => {
+
+  let letStmt = new ast.LetStatement({
+    token: { type: token.TokenType.LET , literal: "let"},
+    name: new ast.Identifier({token: { type: token.TokenType.IDENT, literal: "myVar"}, value: "myVar"}),
+    value: new ast.Identifier({token: { type: token.TokenType.IDENT, literal: "anotherVar"}, value: "anotherVar"})
+  });
+
+  let program = new ast.Program([letStmt]);
+
+  expect(program.toString()).toEqual("let myVar = anotherVar;");
+  if (program.toString() !== "let myVar = anotherVar;") {
+    throw new Error("program.toString() wrong. got=" + program.toString());
+  }
 })
