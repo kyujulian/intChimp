@@ -19,7 +19,7 @@ export interface Expression {
   tokenLiteral() : string;
 }
 
-export class Program {
+export class Program implements Node{
   public statements: Statement[] = [];
   constructor(statements?: Statement[]) {
     if (statements)
@@ -42,7 +42,7 @@ export class Program {
   }
 }
 
-export class Identifier {
+export class Identifier implements Node{
   private token!: Token;
   private value!: string;
   constructor(name: Token, value: string) {
@@ -64,7 +64,7 @@ export class Identifier {
   }
 }
 
-export class LetStatement implements Statement {
+export class LetStatement implements Node,Statement {
   node!: Node;
   private token!: Token;
   private name!: Identifier;
@@ -122,7 +122,7 @@ export class LetStatement implements Statement {
   }
 }
 
-export class ReturnStatement implements Statement {
+export class ReturnStatement implements Statement, Node {
   node!: Node;
   token!: Token;
   returnValue: Expression | null = null;
@@ -156,7 +156,7 @@ export class ReturnStatement implements Statement {
 }
 
 
-export class ExpressionStatement implements Statement {
+export class ExpressionStatement implements Statement, Node {
   node!: Node;
   token: Token;
   expression: Expression | null = null;
