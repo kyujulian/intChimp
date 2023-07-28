@@ -8,6 +8,8 @@ export class Parser {
     lex!: lexer.Lexer;
     curToken!: token.Token;
     peekToken!: token.Token;
+    prefixParseFns : Record<string, Function> = {};
+    infixParseFns : Record<string, Function> = {};
     private errors: string [] = [];
 
 
@@ -15,6 +17,14 @@ export class Parser {
         this.lex = lex;
         this.nextToken();
         this.nextToken();
+    }
+
+    registerPrefix(tokenType: token.TokenType, fn: Function) {
+        this.prefixParseFns[tokenType] = fn;
+    }
+
+    registerInfix(tokenType: token.TokenType, fn: Function) {
+        this.infixParseFns[tokenType] = fn;
     }
 
     
