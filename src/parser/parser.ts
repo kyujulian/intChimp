@@ -3,6 +3,8 @@ import * as ast from "../ast/ast";
 import * as token from "../token/token";
 
 
+//enum-like behavior
+export type ExpressionType = number;
 export const ExpressionType = {
     LOWEST: 1,
     EQUALS: 2, // ==
@@ -11,7 +13,7 @@ export const ExpressionType = {
     PRODUCT: 5, // *
     PREFIX: 6, // -X or !X
     CALL: 7 // myFunction(X)
-}
+} as const;
 
 
 export class Parser {
@@ -28,6 +30,7 @@ export class Parser {
         this.nextToken();
         this.nextToken();
         this.registerPrefix(token.TokenType.IDENT, this.parseIdentifier);
+        this.registerPrefix(token.TokenType.INT, this.parseIntegerLiteral);
     }
 
     registerPrefix(tokenType: token.TokenType, fn: Function) {
@@ -80,7 +83,7 @@ export class Parser {
             }
         }
     }
-    parseExpression() : ast.Expression {
+    parseExpression(expressionType : ExpressionType ) : ast.Expression {
         let prefix = this.prefixParseFns[this.curToken.type];
 
         if (!prefix) {
@@ -92,9 +95,10 @@ export class Parser {
     }
 
     parseExpressionStatement() : ast.Statement | null {
+
         let stmt = new ast.ExpressionStatement({ token: this.curToken, expression: null});
 
-        stmt.setExpression(this.parseExpression());
+        stmt.setExpression(this.parseExpression(ExpressionType.LOWEST));
 
         if (this.peekTokenIs(token.TokenType.SEMICOLON)) {
             this.nextToken();
@@ -133,6 +137,20 @@ export class Parser {
         }
 
         return stmt;
+    }
+
+    parseIntegerLiteral() : ast.IntegerLiteral | null {
+        let intLiteral = new ast.IntegerLiteral({token: this.curToken});
+        let value = parseInt(this.curToken.literal);
+
+        if (isNaN(value)) {
+            let msg = "could not parse " + this.curToken.literal + " as integer";
+            this.errors.push(msg);
+            return null;
+        }
+
+        intLiteral.setValue(value);
+        return intLiteral;
     }
 
     curTokenIs(token : token.TokenType) : boolean {

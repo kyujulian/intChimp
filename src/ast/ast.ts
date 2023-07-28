@@ -15,7 +15,7 @@ export interface Statement {
 export interface Expression {
   node: Node;
   expressionNode(): void;
-  getValue(): string;
+  getValue(): any;
   tokenLiteral() : string;
 }
 
@@ -188,4 +188,32 @@ export class ExpressionStatement implements Statement, Node {
     }
     return "";
   }
+}
+
+export class IntegerLiteral implements Node , Expression{
+  node! : Node;
+  token: Token = { type: "INT", literal: "" };
+  value!: number; // assigned later, so that the parser can catch and take care of any errors at this stage
+
+  constructor( {token} : {token: Token}) {
+    this.token = token;
+  }
+
+
+  setValue(value: number) {
+    this.value = value;
+  }
+  tokenLiteral() {
+    return this.token.literal;
+  }
+  toString() {
+    return this.token.literal;
+  };
+  getValue() {
+    return this.value;
+  }
+  expressionNode() {
+    throw new Error("Method not implemented.");
+  }
+
 }

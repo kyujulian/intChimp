@@ -163,7 +163,7 @@ test("Identifier Expression", () => {
 })
 
 
-test( "Strings " , () => {
+test( "toString() functions" , () => {
 
   let letStmt = new ast.LetStatement({
     token: { type: token.TokenType.LET , literal: "let"},
@@ -178,3 +178,57 @@ test( "Strings " , () => {
     throw new Error("program.toString() wrong. got=" + program.toString());
   }
 })
+
+
+test( "Test integer literal expression ", () => {
+  let input = "5;";
+
+
+  let lex = new lexer.Lexer(input);
+  let pars = new parser.Parser(lex);
+
+  let program = pars.parseProgram();
+  checkParserErrors(pars);
+
+  if (program.statements.length !== 1) {
+    expect(program.statements.length).toBe(1);
+    throw new Error(
+      "program.statements does not contain 1 statements. got:" +
+        program.statements.length
+    );
+  }
+
+  let stmts = program.statements[0];
+
+  if (! (stmts instanceof ast.ExpressionStatement)) {
+    throw new Error(
+      "stmts not ast.ExpressionStatement. got=" + stmts.constructor.name
+      )
+    }
+
+  let literal = stmts.getExpression();
+  if (!literal) {
+    throw new Error(" statements.getExpression() returned null value");
+  }
+
+  if (!(literal instanceof ast.IntegerLiteral)) {
+    throw new Error(
+      "exp not ast.IntegerLiteral. got=" + literal.constructor.name
+    );
+  } 
+
+  if (literal.getValue() !== 5) {
+    expect(literal.getValue()).toBe(5);
+    throw new Error(
+      "literal.value not 5. got=" + literal.getValue()
+    );
+  }
+
+  if (literal.tokenLiteral() !== "5") {
+    expect(literal.tokenLiteral()).toBe("5");
+    throw new Error(
+      "literal.tokenLiteral not '5'. got=" +
+        literal.tokenLiteral()
+    );
+  }
+});
