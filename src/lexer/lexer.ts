@@ -1,10 +1,10 @@
-import * as token from "../token/token";
+import * as token from '../token/token';
 
 export class Lexer {
   input!: string;
   position: number = 0; //current position in input (poinst to current char)
   readPosition: number = 0; // current reading position in input (after current char)
-  ch: string = "0"; // current char under examination
+  ch: string = '0'; // current char under examination
 
   constructor(input: string) {
     this.input = input;
@@ -13,7 +13,7 @@ export class Lexer {
 
   readChar() {
     if (this.readPosition >= this.input.length) {
-      this.ch = "0";
+      this.ch = '0';
     } else {
       this.ch = this.input[this.readPosition];
     }
@@ -26,8 +26,8 @@ export class Lexer {
     this.skipWhitespace();
 
     switch (this.ch) {
-      case "=": {
-        if (this.peekChar() === "=") {
+      case '=': {
+        if (this.peekChar() === '=') {
           let ch = this.ch;
           this.readChar();
           tok = newToken(token.TokenType.EQ, ch + this.ch);
@@ -36,8 +36,8 @@ export class Lexer {
         }
         break;
       }
-      case "!": {
-        if (this.peekChar() === "=") {
+      case '!': {
+        if (this.peekChar() === '=') {
           let ch = this.ch;
           this.readChar();
           tok = newToken(token.TokenType.NOT_EQ, ch + this.ch);
@@ -47,64 +47,64 @@ export class Lexer {
         break;
       }
       //One chaaracter tokens
-      case "(": {
+      case '(': {
         tok = newToken(token.TokenType.LPAREN, this.ch);
         break;
       }
-      case ")": {
+      case ')': {
         tok = newToken(token.TokenType.RPAREN, this.ch);
         break;
       }
-      case ",": {
+      case ',': {
         tok = newToken(token.TokenType.COMMA, this.ch);
         break;
       }
-      case "+": {
+      case '+': {
         tok = newToken(token.TokenType.PLUS, this.ch);
         break;
       }
-      case "{": {
+      case '{': {
         tok = newToken(token.TokenType.LBRACE, this.ch);
         break;
       }
-      case "}": {
+      case '}': {
         tok = newToken(token.TokenType.RBRACE, this.ch);
         break;
       }
-      case ";": {
+      case ';': {
         tok = newToken(token.TokenType.SEMICOLON, this.ch);
         break;
       }
-      case "-": {
+      case '-': {
         tok = newToken(token.TokenType.MINUS, this.ch);
         break;
       }
-      case "/": {
+      case '/': {
         tok = newToken(token.TokenType.SLASH, this.ch);
         break;
       }
-      case "*": {
+      case '*': {
         tok = newToken(token.TokenType.ASTERISK, this.ch);
         break;
       }
-      case "<": {
+      case '<': {
         tok = newToken(token.TokenType.LT, this.ch);
         break;
       }
-      case ">": {
+      case '>': {
         tok = newToken(token.TokenType.GT, this.ch);
         break;
       }
-      case "<": {
+      case '<': {
         tok = newToken(token.TokenType.LT, this.ch);
         break;
       }
-      case ">": {
+      case '>': {
         tok = newToken(token.TokenType.GT, this.ch);
         break;
       }
-      case "0": {
-        tok = newToken(token.TokenType.EOF, "");
+      case '0': {
+        tok = newToken(token.TokenType.EOF, '');
         break;
       }
       default: {
@@ -117,7 +117,7 @@ export class Lexer {
           tok = newToken(token.TokenType.INT, literal);
           return tok;
         } else {
-          console.log("illegal", this.ch, "|");
+          console.log('illegal', this.ch, '|');
           tok = newToken(token.TokenType.ILLEGAL, this.ch);
         }
 
@@ -145,10 +145,10 @@ export class Lexer {
   }
   skipWhitespace() {
     while (
-      this.ch === " " ||
-      this.ch === "\t" ||
-      this.ch === "\n" ||
-      this.ch === "\r"
+      this.ch === ' ' ||
+      this.ch === '\t' ||
+      this.ch === '\n' ||
+      this.ch === '\r'
     ) {
       this.readChar();
     }
@@ -171,9 +171,9 @@ const newToken = (tokenType: token.TokenType, ch: any) => {
 };
 
 function isDigit(ch: any): boolean {
-  return "0" <= ch && ch <= "9";
+  return '0' <= ch && ch <= '9';
 }
 
 function isLetter(ch: any): boolean {
-  return ("a" <= ch && ch <= "z") || ("A" <= ch && ch <= "Z") || ch == "_";
+  return ('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') || ch == '_';
 }
