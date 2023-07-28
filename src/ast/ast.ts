@@ -2,7 +2,7 @@ import { Token } from "../token/token";
 
 interface Node {
   tokenLiteral(): string;
-  toString() : string;
+  toString(): string;
 }
 
 export interface Statement {
@@ -15,15 +15,14 @@ export interface Statement {
 export interface Expression {
   node: Node;
   expressionNode(): void;
-  getValue(): any;
-  tokenLiteral() : string;
+  getValue(): any; //basically anything that's not an array
+  tokenLiteral(): string;
 }
 
-export class Program implements Node{
+export class Program implements Node {
   public statements: Statement[] = [];
   constructor(statements?: Statement[]) {
-    if (statements)
-      this.statements = statements;
+    if (statements) this.statements = statements;
   }
 
   tokenLiteral(): string {
@@ -33,10 +32,10 @@ export class Program implements Node{
       return "";
     }
   }
-  toString() : string {
+  toString(): string {
     let out = "";
-    for(let i = 0; i < this.statements.length; ++i) {
-        out += this.statements[i].toString();
+    for (let i = 0; i < this.statements.length; ++i) {
+      out += this.statements[i].toString();
     }
     return out;
   }
@@ -64,14 +63,14 @@ export class Identifier implements Node {
   }
 }
 
-export class LetStatement implements Node,Statement {
+export class LetStatement implements Node, Statement {
   node!: Node;
   private token!: Token;
   private name!: Identifier;
-  private value!: Expression | Identifier | null ;
+  private value!: Expression | Identifier | null;
 
-  getExpression() : Expression | null {
-    if (! (this.value instanceof Identifier)) {
+  getExpression(): Expression | null {
+    if (!(this.value instanceof Identifier)) {
       return this.value;
     }
     return null;
@@ -108,17 +107,17 @@ export class LetStatement implements Node,Statement {
   tokenLiteral(): string {
     return this.token.literal;
   }
-  toString() : string {
-        let out = "";
-        out += this.tokenLiteral() + " ";
-        out += this.name.toString();
-        out += " = ";
+  toString(): string {
+    let out = "";
+    out += this.tokenLiteral() + " ";
+    out += this.name.toString();
+    out += " = ";
 
-        if (this.value) {
-            out += this.value.toString();
-        }
-        out += ";";
-        return out;
+    if (this.value) {
+      out += this.value.toString();
+    }
+    out += ";";
+    return out;
   }
 }
 
@@ -126,7 +125,10 @@ export class ReturnStatement implements Statement, Node {
   node!: Node;
   token!: Token;
   returnValue: Expression | null = null;
-  constructor({token,returnValue}: {
+  constructor({
+    token,
+    returnValue,
+  }: {
     token: Token;
     returnValue?: Expression | null;
   }) {
@@ -134,8 +136,7 @@ export class ReturnStatement implements Statement, Node {
     if (returnValue) this.returnValue = returnValue;
   }
 
-
-  getExpression() : Expression | null {
+  getExpression(): Expression | null {
     return this.returnValue;
   }
   statementNode() {}
@@ -143,18 +144,17 @@ export class ReturnStatement implements Statement, Node {
   tokenLiteral(): string {
     return this.token.literal;
   }
-  toString() : string {
+  toString(): string {
     let out = "";
     out += this.tokenLiteral() + " ";
     if (this.returnValue) {
-        out += this.returnValue.toString();
+      out += this.returnValue.toString();
     }
 
     out += ";";
     return out;
   }
 }
-
 
 export class ExpressionStatement implements Statement, Node {
   node!: Node;
@@ -171,14 +171,14 @@ export class ExpressionStatement implements Statement, Node {
     this.expression = expression;
   }
 
-  setExpression( exp: Expression) {
+  setExpression(exp: Expression) {
     this.expression = exp;
   }
 
   statementNode() {}
   getExpression(): Expression | null {
     return this.expression;
-   }
+  }
   tokenLiteral(): string {
     return this.token.literal;
   }
@@ -190,15 +190,14 @@ export class ExpressionStatement implements Statement, Node {
   }
 }
 
-export class IntegerLiteral implements Node , Expression{
-  node! : Node;
+export class IntegerLiteral implements Node, Expression {
+  node!: Node;
   token: Token = { type: "INT", literal: "" };
   value!: number; // assigned later, so that the parser can catch and take care of any errors at this stage
 
-  constructor( {token} : {token: Token}) {
+  constructor({ token }: { token: Token }) {
     this.token = token;
   }
-
 
   setValue(value: number) {
     this.value = value;
@@ -208,12 +207,47 @@ export class IntegerLiteral implements Node , Expression{
   }
   toString() {
     return this.token.literal;
-  };
+  }
   getValue() {
     return this.value;
   }
   expressionNode() {
     throw new Error("Method not implemented.");
   }
+}
 
+
+export class PrefixExpression implements Node, Expression {
+  node! : Node;
+  token: Token;
+  operator: string;
+  right!: Expression;
+  constructor({token, operator}: {token: Token, operator: string}) {
+    this.token = token;
+    this.operator = operator;
+  }
+  getValue() {
+    // not sure about this
+    return this.right;
+  }
+  setRight(right : Expression) {
+    this.right = right;
+  }
+
+  tokenLiteral() {
+    return this.token.literal;
+  }
+  toString() {
+    let out = "";
+
+    out += "(";
+    out += this.operator;
+    out += this.right.toString();
+    out += ")";
+
+    return out;
+  }
+  expressionNode() {
+    throw new Error("Method not implemented.");
+  }
 }

@@ -232,3 +232,86 @@ test( "Test integer literal expression ", () => {
     );
   }
 });
+
+
+
+test(" Parsing prefix operators" , () => {
+  let prefixTests: {
+    input: string;
+    operator: string;
+    integerValue: number;
+  }[] = [
+    {input:"!5;", operator:"!", integerValue:5},
+    {input:"-15;", operator:"-", integerValue:15}
+  ];
+
+
+  for (let test of prefixTests) {
+    console.log("testing prefix operator: " + test.input)
+    let lex = new lexer.Lexer(test.input);
+    let pars = new parser.Parser(lex);
+    let program = pars.parseProgram();
+    checkParserErrors(pars);
+
+    if (program.statements.length > 1) {
+      expect(program.statements.length).toBe(1);
+      throw new Error(
+        "program.statements does not contain 1 statements. got:" +
+          program.statements.length
+      );
+    }
+
+    let stmt = program.statements[0];
+    if (!(stmt instanceof ast.ExpressionStatement)){
+      expect(stmt).toBeInstanceOf(ast.ExpressionStatement);
+      throw new Error(
+        "statements not ast.ExpressionStatement got=" + stmt.constructor.name
+      );
+    }
+
+    let exp = stmt.getExpression();
+    if (!exp) {
+      throw new Error("stmt.getExpression() returned null value");
+    }
+    if (!(exp instanceof ast.PrefixExpression)){
+      expect(exp).toBeInstanceOf(ast.IntegerLiteral);
+      throw new Error(
+        "exp not ast.IntegerLiteral. got=" + exp.constructor.name
+      );
+    }
+
+    //real tests
+    if (exp.operator != test.operator) {
+      expect(exp.operator).toBe(test.operator);
+      throw new Error (" Expected exp.operator to be " + test.operator + "got :" + exp.operator)
+    }
+
+    if (!(testIntegerLiteral(exp.right, test.integerValue))) {
+      throw new Error("testIntegerLiteral failed")
+    }
+  }
+})
+
+
+function testIntegerLiteral( right: ast.Expression, testValue : number) :boolean {
+
+  if (!(right instanceof ast.IntegerLiteral)){
+    throw new Error("right not ast.IntegerLitera. got: "  + right.constructor.name)
+  }
+
+  if (right.getValue() !== testValue) {
+    expect(right.getValue()).toBe(testValue);
+    throw new Error(
+      "right.value not " + testValue + ". got=" + right.getValue()
+    );
+  }
+
+  if (right.tokenLiteral() !== testValue.toString()) {
+    expect(right.tokenLiteral()).toBe(testValue.toString());
+    throw new Error(
+      "right.tokenLiteral not " + testValue + ". got=" +
+        right.tokenLiteral()
+    );
+  }
+  return true;
+}

@@ -31,12 +31,15 @@ export class Parser {
         this.nextToken();
         this.registerPrefix(token.TokenType.IDENT, this.parseIdentifier);
         this.registerPrefix(token.TokenType.INT, this.parseIntegerLiteral);
+        this.registerPrefix(token.TokenType.BANG, this.parsePrefixExpression);
+        this.registerPrefix(token.TokenType.MINUS, this.parsePrefixExpression);
     }
 
     registerPrefix(tokenType: token.TokenType, fn: Function) {
         //interesting syntax here
         //Assure that the function is bound to the parser
         //that means that 'this' keyword will still be bound inside the function calls
+        //                                  vvvv
         this.prefixParseFns[tokenType] = fn.bind(this);
     }
 
@@ -65,6 +68,18 @@ export class Parser {
 
         return program;
     }
+    parsePrefixExpression() : ast.Expression {
+        let expression = new ast.PrefixExpression({
+            token: this.curToken,
+            operator : this.curToken.literal
+        });
+
+        this.nextToken();
+
+        expression.setRight(this.parseExpression(ExpressionType.PREFIX) );
+        return expression;
+
+    }
     parseIdentifier() : ast.Identifier {
         //cannot call this inside this function
         return new ast.Identifier({token: this.curToken, value: this.curToken.literal});
@@ -83,12 +98,16 @@ export class Parser {
             }
         }
     }
+
+    noPrefixParseFnError(tokenType: token.TokenType) {
+        let msg = "no prefix parse function for " + tokenType;
+        throw new Error(msg);
+    }
     parseExpression(expressionType : ExpressionType ) : ast.Expression {
         let prefix = this.prefixParseFns[this.curToken.type];
 
         if (!prefix) {
-            console.log(prefix);
-            throw new Error("no prefix parse function for " + this.curToken.type);
+            this.noPrefixParseFnError(this.curToken.type);
         }
         let leftExpression = prefix();
         return leftExpression;
