@@ -116,7 +116,7 @@ test("Return statements", () => {
 
 
 test("Identifier Expression", () => {
-  let input = "foobar";
+  let input = "foobar;";
 
 
   let lex = new lexer.Lexer(input);
@@ -158,6 +158,5 @@ test("Identifier Expression", () => {
       );
     }
   }
-  let ident = stmt.getExpression();
 
 })

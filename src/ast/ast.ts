@@ -12,7 +12,7 @@ export interface Statement {
   getExpression(): Expression | null;
 }
 
-interface Expression {
+export interface Expression {
   node: Node;
   expressionNode(): void;
   getValue(): string;
@@ -157,27 +157,35 @@ export class ReturnStatement implements Statement {
 
 
 export class ExpressionStatement implements Statement {
-    node!: Node;
-    token : Token;
-    Expression : Expression | null = null;
-    constructor({token: token, Expression: Expression} : {token: Token, Expression: Expression}) {
-        this.token = token;
-        this.Expression = Expression;
-    }
+  node!: Node;
+  token: Token;
+  expression: Expression | null = null;
+  constructor({
+    token: token,
+    expression: expression,
+  }: {
+    token: Token;
+    expression: Expression | null;
+  }) {
+    this.token = token;
+    this.expression = expression;
+  }
 
+  setExpression( exp: Expression) {
+    this.expression = exp;
+  }
 
-    statementNode(){};
-    getExpression() : Expression | null{
-      return this.Expression;
+  statementNode() {}
+  getExpression(): Expression | null {
+    return this.expression;
+   }
+  tokenLiteral(): string {
+    return this.token.literal;
+  }
+  toString(): string {
+    if (this.expression) {
+      return this.expression.toString();
     }
-    tokenLiteral(): string {
-        return this.token.literal;
-    }
-    toString() : string {
-        if (this.Expression) {
-            return this.Expression.toString();
-        }
-        return "";
-    }
-
+    return "";
+  }
 }

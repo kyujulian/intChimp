@@ -3,6 +3,16 @@ import * as ast from "../ast/ast";
 import * as token from "../token/token";
 
 
+export const ExpressionType = {
+    LOWEST: 1,
+    EQUALS: 2, // ==
+    LESSGREATER: 3, // > or <
+    SUM : 4, // +
+    PRODUCT: 5, // *
+    PREFIX: 6, // -X or !X
+    CALL: 7 // myFunction(X)
+}
+
 
 export class Parser {
     lex!: lexer.Lexer;
@@ -17,17 +27,21 @@ export class Parser {
         this.lex = lex;
         this.nextToken();
         this.nextToken();
+        this.registerPrefix(token.TokenType.IDENT, this.parseIdentifier);
     }
 
     registerPrefix(tokenType: token.TokenType, fn: Function) {
-        this.prefixParseFns[tokenType] = fn;
+        //interesting syntax here
+        //Assure that the function is bound to the parser
+        //that means that 'this' keyword will still be bound inside the function calls
+        this.prefixParseFns[tokenType] = fn.bind(this);
     }
 
     registerInfix(tokenType: token.TokenType, fn: Function) {
-        this.infixParseFns[tokenType] = fn;
+        this.infixParseFns[tokenType] = fn.bind(this);
     }
 
-    
+
 
 
     nextToken()  {
@@ -46,9 +60,11 @@ export class Parser {
             this.nextToken();
         }
 
-
-
         return program;
+    }
+    parseIdentifier() : ast.Identifier {
+        //cannot call this inside this function
+        return new ast.Identifier(this.curToken, this.curToken.literal);
     }
 
     parseStatement () : ast.Statement | null {
@@ -59,9 +75,34 @@ export class Parser {
             case (token.TokenType.RETURN):{
                 return this.parseReturnStatement();
             }
+            case(token.TokenType.IDENT): {
+                return this.parseExpressionStatement();
+            }
             default:
                 return null;
         }
+    }
+    parseExpression() : ast.Expression {
+        let prefix = this.prefixParseFns[this.curToken.type];
+
+        if (!prefix) {
+            console.log(prefix);
+            throw new Error("no prefix parse function for " + this.curToken.type);
+        }
+        let leftExpression = prefix();
+        return leftExpression;
+    }
+
+    parseExpressionStatement() : ast.Statement | null {
+        let stmt = new ast.ExpressionStatement({ token: this.curToken, expression: null});
+
+        stmt.setExpression(this.parseExpression());
+
+        if (this.peekTokenIs(token.TokenType.SEMICOLON)) {
+            this.nextToken();
+        }
+        return stmt;
+
     }
 
 
