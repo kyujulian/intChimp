@@ -9,11 +9,14 @@ export interface Statement {
   node: Node;
   statementNode(): void;
   tokenLiteral(): string;
+  getExpression(): Expression | null;
 }
 
 interface Expression {
   node: Node;
   expressionNode(): void;
+  getValue(): string;
+  tokenLiteral() : string;
 }
 
 export class Program {
@@ -67,6 +70,13 @@ export class LetStatement implements Statement {
   private name!: Identifier;
   private value!: Expression | Identifier | null ;
 
+  getExpression() : Expression | null {
+    if (! (this.value instanceof Identifier)) {
+      return this.value;
+    }
+    return null;
+  }
+
   constructor({
     token,
     name,
@@ -79,6 +89,10 @@ export class LetStatement implements Statement {
     this.token = token;
     this.name = name;
     this.value = value;
+  }
+
+  getValue() {
+    return this.value;
   }
 
   getName() {
@@ -119,6 +133,11 @@ export class ReturnStatement implements Statement {
     this.token = token;
     if (returnValue) this.returnValue = returnValue;
   }
+
+
+  getExpression() : Expression | null {
+    return this.returnValue;
+  }
   statementNode() {}
 
   tokenLiteral(): string {
@@ -148,6 +167,9 @@ export class ExpressionStatement implements Statement {
 
 
     statementNode(){};
+    getExpression() : Expression | null{
+      return this.Expression;
+    }
     tokenLiteral(): string {
         return this.token.literal;
     }

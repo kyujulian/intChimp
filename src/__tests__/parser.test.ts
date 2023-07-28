@@ -112,4 +112,52 @@ test("Return statements", () => {
       }
     }
   }
+});
+
+
+test("Identifier Expression", () => {
+  let input = "foobar";
+
+
+  let lex = new lexer.Lexer(input);
+  let pars = new parser.Parser(lex);
+  let program = pars.parseProgram();
+  checkParserErrors(pars);
+
+
+  if (program.statements.length !== 1) {
+    expect(program.statements.length).toBe(1);
+    throw new Error(
+      "program.statements does not contain 1 statements. got:" +
+        program.statements.length
+    );
+  }
+
+  let stmt = program.statements[0];
+  expect(stmt).toBeInstanceOf(ast.ExpressionStatement);
+
+  if (stmt.getExpression() instanceof ast.Identifier) {
+
+    let ident = stmt.getExpression();
+
+    if (!ident) {
+      throw new Error( "ident is null");
+    }
+
+    if (ident.getValue() !== "foobar") {
+      expect(ident.getValue()).toBe("foobar");
+      throw new Error(
+        "ident.value not foobar. got=" + ident.getValue()
+      );
+    }
+
+    if (ident.tokenLiteral() !== "foobar") {
+      expect(ident.tokenLiteral()).toBe("foobar");
+      throw new Error(
+        "ident.tokenLiteral not foobar. got=" + ident.tokenLiteral()
+      );
+    }
+  }
+  let ident = stmt.getExpression();
+
 })
